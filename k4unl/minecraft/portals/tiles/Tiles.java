@@ -10,6 +10,7 @@ public class Tiles {
 	public static void init() {
 		GameRegistry.registerTileEntity(TilePortalCore.class, "tilePortalCore");
 		GameRegistry.registerTileEntity(TilePortalDummy.class, "tilePortalDummy");
+		GameRegistry.registerTileEntity(TilePortalPortal.class, "tilePortalPortal");
 	}
 
 

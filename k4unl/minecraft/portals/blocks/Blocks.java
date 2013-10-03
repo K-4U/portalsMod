@@ -3,6 +3,7 @@ package k4unl.minecraft.portals.blocks;
 import k4unl.minecraft.portals.lib.config.Ids;
 import k4unl.minecraft.portals.lib.config.Names;
 import net.minecraft.block.Block;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -24,6 +25,7 @@ public class Blocks {
 		GameRegistry.registerBlock(portalCoreBlockInst, Names.portalCoreBlock_unlocalized);
 		GameRegistry.registerBlock(portalDummyBlockInst, Names.portalDummyBlock_unlocalized);
 		GameRegistry.registerBlock(portalPortalBlockInst, Names.portalPortalBlock_unlocalized);
+		
 	}
 	
 	public static void addNames() {

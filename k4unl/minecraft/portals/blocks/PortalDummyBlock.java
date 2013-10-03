@@ -1,5 +1,8 @@
 package k4unl.minecraft.portals.blocks;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import k4unl.minecraft.portals.lib.config.Ids;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.lib.Functions;
@@ -74,5 +77,10 @@ public class PortalDummyBlock extends BlockContainer {
 		
 		return true;
 	}
+	
+	@SideOnly(Side.CLIENT)
+    public int idPicked(World par1World, int par2, int par3, int par4){
+        return Ids.portalCoreBlock_actual;
+    }
 	
 }

@@ -70,7 +70,7 @@ public class PortalCoreBlock extends BlockContainer {
 				{
 					tileEntity.convertDummies();
 					if(world.isRemote)
-						player.addChatMessage("Multi-Block Furnace Created!");
+						player.addChatMessage("Portal created");
 				}
 			}
 			
