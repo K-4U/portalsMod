@@ -219,9 +219,12 @@ public class TilePortalCore extends TileEntity {
 					worldObj.setBlockMetadataWithNotify(x, y, z, metaDataToSet, 2);
 				}
 				worldObj.markBlockForUpdate(x, y, z);
-				if(blockIdToSet == Ids.portalDummyBlock_actual){
-					TilePortalDummy dummyTE = (TilePortalDummy)worldObj.getBlockTileEntity(x, y, z);
+				if(blockIdToSet == Ids.portalIndicatorBlock_actual){
+					TilePortalIndicator dummyTE = (TilePortalIndicator)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);
+				}else if(blockIdToSet == Ids.portalDummyBlock_actual){
+					TilePortalDummy dummyTE = (TilePortalDummy)worldObj.getBlockTileEntity(x, y, z);
+					dummyTE.setCore(this);	
 				}
 			}
 		}
@@ -260,7 +263,8 @@ public class TilePortalCore extends TileEntity {
 				if(horiz == 0 && vert == 0)
 					continue;
 				
-				if(blockId == Ids.portalDummyBlock_actual){
+				if(blockId == Ids.portalDummyBlock_actual || 
+						blockId == Ids.portalIndicatorBlock_actual){
 					if(isCorner){
 						worldObj.setBlock(x, y, z, cornerBlockId);
 					}else if(isTopRow){

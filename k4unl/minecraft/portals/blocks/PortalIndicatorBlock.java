@@ -21,9 +21,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 public class PortalIndicatorBlock extends BlockContainer{
 	private Icon[] iconArray;
+	private Icon topIcon;
 	
 	public PortalIndicatorBlock(int id) {
 		super(id, Material.iron);
@@ -90,6 +92,10 @@ public class PortalIndicatorBlock extends BlockContainer{
 	 * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
 	 */
 	public Icon getIcon(int par1, int par2) {
+		ForgeDirection s = ForgeDirection.getOrientation(par1);
+		if(s == ForgeDirection.UP || s == ForgeDirection.DOWN){
+			return topIcon;
+		}
 		return this.iconArray[par2 % this.iconArray.length];
 	}
 
@@ -131,16 +137,17 @@ public class PortalIndicatorBlock extends BlockContainer{
 	 * When this method is called, your block should register all the icons it needs with the given IconRegister. This
 	 * is the only chance you get to register icons.
 	 */
-	public void registerIcons(IconRegister par1IconRegister) {
+	public void registerIcons(IconRegister iconRegister) {
 		this.iconArray = new Icon[16];
 
 		for (int i = 0; i < this.iconArray.length; ++i) {
-			this.iconArray[i] = par1IconRegister.registerIcon(
+			this.iconArray[i] = iconRegister.registerIcon(
 					ModInfo.ID.toLowerCase() + ":" 
 					+ Names.portalIndicatorBlock_unlocalized
 					+ "_"
 					+ ItemDye.dyeItemNames[getDyeFromBlock(i)]);
 		}
+		topIcon = iconRegister.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalDummyBlock_unlocalized);
 	}
 	
 }
