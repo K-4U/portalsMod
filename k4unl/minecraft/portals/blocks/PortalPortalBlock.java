@@ -9,8 +9,11 @@ import k4unl.minecraft.portals.tiles.TilePortalCore;
 import k4unl.minecraft.portals.tiles.TilePortalPortal;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -21,10 +24,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PortalPortalBlock extends BlockContainer {
 	private Icon blockIcon;
-	TilePortalCore tileCore;
-	int coreX;
-	int coreY;
-	int coreZ;
 	
 	public PortalPortalBlock(int id) {
 		super(id, Material.portal);
@@ -96,15 +95,26 @@ public class PortalPortalBlock extends BlockContainer {
         return false;
     }
     
-    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity par5Entity){
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity colEntity){
+    	//The problem here being that this actually won't return the portal
+    	//The coördinates supplied by this function are actually the coördinates
+    	//of the entity trying to pass.
+    	if(colEntity instanceof EntityPlayerMP || colEntity instanceof EntityPlayerSP){
+    		//For now, just players plox
+    		TilePortalPortal dummy = (TilePortalPortal)world.getBlockTileEntity(x, y, z);
+    		if(dummy != null && dummy.getCore() != null)
+    			dummy.getCore().getMasterClass().teleport(colEntity);
+    	}
     	
+    	super.onEntityCollidedWithBlock(world, x, y, z, colEntity);
+		
     }
     
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int oldBlockId, int par6){
 		TilePortalPortal dummy = (TilePortalPortal)world.getBlockTileEntity(x, y, z);
 		if(dummy != null && dummy.getCore() != null)
-			dummy.getCore().invalidateMultiblock();
+			dummy.getCore().getMasterClass().deactivatePortal();
 		
 		super.breakBlock(world, x, y, z, oldBlockId, par6);
 	}
@@ -117,7 +127,6 @@ public class PortalPortalBlock extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		// TODO Auto-generated method stub
 		return new TilePortalPortal();
 	}
 

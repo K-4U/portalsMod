@@ -3,12 +3,11 @@ package k4unl.minecraft.portals.tiles;
 import java.util.logging.Level;
 
 import k4unl.minecraft.portals.lib.LogHelper;
-import k4unl.minecraft.portals.lib.config.Constants;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class TilePortalPortal extends TileEntity{
-	
+
+public class TilePortalIndicator extends TileEntity{
 	TilePortalCore tileCore;
 	int coreX;
 	int coreY;
@@ -23,13 +22,9 @@ public class TilePortalPortal extends TileEntity{
 	}
 	
 	public TilePortalCore getCore(){
-		if(tileCore == null){
+		if(tileCore == null)
 			tileCore = (TilePortalCore)worldObj.getBlockTileEntity(coreX, coreY, coreZ);
-			if(tileCore == null){
-				TileEntity tEnt = worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
-				LogHelper.log(Level.INFO, "Derp message");
-			}
-		}
+		
 		return tileCore;
 	}
 	
@@ -49,5 +44,20 @@ public class TilePortalPortal extends TileEntity{
 		tagCompound.setInteger("CoreX", coreX);
 		tagCompound.setInteger("CoreY", coreY);
 		tagCompound.setInteger("CoreZ", coreZ);
+	}
+	
+	public void checkRedstonePower() {
+		boolean isIndirectlyPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		if(isIndirectlyPowered && !isRedstonePowered){
+			LogHelper.log(Level.INFO, "Redstone change");
+			isRedstonePowered = true;
+			TilePortalCore core = this.getCore();
+			core.redstoneChanged(isRedstonePowered);
+		}else if(isRedstonePowered && !isIndirectlyPowered){
+			LogHelper.log(Level.INFO, "Redstone change");
+			isRedstonePowered = false;
+			TilePortalCore core = this.getCore();
+			core.redstoneChanged(isRedstonePowered);
+		}
 	}
 }

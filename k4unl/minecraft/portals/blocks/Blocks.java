@@ -11,11 +11,13 @@ public class Blocks {
 	public static Block portalCoreBlockInst;
 	public static Block portalDummyBlockInst;
 	public static Block portalPortalBlockInst;
+	public static Block portalIndicatorBlockInst;
 
 	public static void init() {
 		portalCoreBlockInst = new PortalCoreBlock(Ids.portalCoreBlock_actual);
 		portalDummyBlockInst = new PortalDummyBlock(Ids.portalDummyBlock_actual);
 		portalPortalBlockInst = new PortalPortalBlock(Ids.portalPortalBlock_actual);
+		portalIndicatorBlockInst = new PortalIndicatorBlock(Ids.portalIndicatorBlock_actual);
 		
 		registerBlocks();
 		addNames();
@@ -25,6 +27,7 @@ public class Blocks {
 		GameRegistry.registerBlock(portalCoreBlockInst, Names.portalCoreBlock_unlocalized);
 		GameRegistry.registerBlock(portalDummyBlockInst, Names.portalDummyBlock_unlocalized);
 		GameRegistry.registerBlock(portalPortalBlockInst, Names.portalPortalBlock_unlocalized);
+		GameRegistry.registerBlock(portalIndicatorBlockInst, Names.portalIndicatorBlock_unlocalized);
 		
 	}
 	
@@ -32,6 +35,7 @@ public class Blocks {
 		LanguageRegistry.addName(portalCoreBlockInst, Names.portalCoreBlock_name);
 		LanguageRegistry.addName(portalDummyBlockInst, Names.portalDummyBlock_name);
 		LanguageRegistry.addName(portalPortalBlockInst, Names.portalPortalBlock_name);
+		LanguageRegistry.addName(portalIndicatorBlockInst, Names.portalIndicatorBlock_name);
 	}
 
 }

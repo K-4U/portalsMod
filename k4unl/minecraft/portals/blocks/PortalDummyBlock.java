@@ -8,8 +8,6 @@ import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
 import k4unl.minecraft.portals.tiles.TilePortalDummy;
-import mods.multifurnace.tileentity.TileEntityMultiFurnaceCore;
-import mods.multifurnace.tileentity.TileEntityMultiFurnaceDummy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -83,4 +81,12 @@ public class PortalDummyBlock extends BlockContainer {
         return Ids.portalCoreBlock_actual;
     }
 	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y,
+				int z, int blockId) {
+		super.onNeighborBlockChange(world, x, y, z, blockId);
+		
+		TilePortalDummy tile = (TilePortalDummy) world.getBlockTileEntity(x, y, z);
+		tile.checkRedstonePower();
+	}
 }

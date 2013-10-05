@@ -4,9 +4,7 @@ import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
-import mods.multifurnace.MultiFurnaceMod;
-import mods.multifurnace.common.ModConfig;
-import mods.multifurnace.tileentity.TileEntityMultiFurnaceCore;
+import k4unl.minecraft.portals.tiles.TilePortalDummy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -55,6 +53,15 @@ public class PortalCoreBlock extends BlockContainer {
 	}
 	
 	@Override
+	public void onNeighborBlockChange(World world, int x, int y,
+				int z, int blockId) {
+		super.onNeighborBlockChange(world, x, y, z, blockId);
+		
+		TilePortalCore tile = (TilePortalCore) world.getBlockTileEntity(x, y, z);
+		tile.checkRedstonePower();
+	}
+	
+	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9){
 		if(player.isSneaking())
 			return false;
@@ -85,6 +92,6 @@ public class PortalCoreBlock extends BlockContainer {
 		//Functions.teleportPlayer(player, 45, 18, 574);
 		
 		return true;
-	}
+	}	
 	
 }

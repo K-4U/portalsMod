@@ -1,6 +1,8 @@
 package k4unl.minecraft.portals.tiles;
 
-import mods.multifurnace.tileentity.TileEntityMultiFurnaceCore;
+import java.util.logging.Level;
+
+import k4unl.minecraft.portals.lib.LogHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -10,16 +12,16 @@ public class TilePortalDummy extends TileEntity{
 	int coreX;
 	int coreY;
 	int coreZ;
-	public void setCore(TilePortalCore core)
-	{
+	boolean isRedstonePowered = false;
+	
+	public void setCore(TilePortalCore core){
 		coreX = core.xCoord;
 		coreY = core.yCoord;
 		coreZ = core.zCoord;
 		tileCore = core;
 	}
 	
-	public TilePortalCore getCore()
-	{
+	public TilePortalCore getCore(){
 		if(tileCore == null)
 			tileCore = (TilePortalCore)worldObj.getBlockTileEntity(coreX, coreY, coreZ);
 		
@@ -27,8 +29,7 @@ public class TilePortalDummy extends TileEntity{
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
-	{
+	public void readFromNBT(NBTTagCompound tagCompound){
 		super.readFromNBT(tagCompound);
 		
 		coreX = tagCompound.getInteger("CoreX");
@@ -37,12 +38,26 @@ public class TilePortalDummy extends TileEntity{
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
-	{
+	public void writeToNBT(NBTTagCompound tagCompound){
 		super.writeToNBT(tagCompound);
 		
 		tagCompound.setInteger("CoreX", coreX);
 		tagCompound.setInteger("CoreY", coreY);
 		tagCompound.setInteger("CoreZ", coreZ);
+	}
+	
+	public void checkRedstonePower() {
+		boolean isIndirectlyPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		if(isIndirectlyPowered && !isRedstonePowered){
+			LogHelper.log(Level.INFO, "Redstone change");
+			isRedstonePowered = true;
+			TilePortalCore core = this.getCore();
+			core.redstoneChanged(isRedstonePowered);
+		}else if(isRedstonePowered && !isIndirectlyPowered){
+			LogHelper.log(Level.INFO, "Redstone change");
+			isRedstonePowered = false;
+			TilePortalCore core = this.getCore();
+			core.redstoneChanged(isRedstonePowered);
+		}
 	}
 }

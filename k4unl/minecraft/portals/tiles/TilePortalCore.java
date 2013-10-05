@@ -5,72 +5,98 @@ import java.util.logging.Level;
 import k4unl.minecraft.portals.blocks.PortalCoreBlock;
 import k4unl.minecraft.portals.lib.LogHelper;
 import k4unl.minecraft.portals.lib.config.Ids;
-import mods.multifurnace.block.BlockMultiFurnaceCore;
+import k4unl.minecraft.portals.vars.PortalStorage.Portal;
+import k4unl.minecraft.portals.lib.config.Constants;
+import k4unl.minecraft.portals.vars.Types.portalColor;
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public class TilePortalCore extends TileEntity {
 	private boolean isValidMultiblock;
-	private static final int portalWidth = 5;
-	private static final int portalHeight = 5;
-	/*
-	private static final int portalX_neg = -2;
-	private static final int portalX_pos = 2;
-	private static final int portalY_neg = 0;
-	private static final int portalY_pos = 4;
-	private static final int portalZ_neg = 0;
-	private static final int portalZ_pos = 0;*/
+
 	private static final int cornerBlockId = Block.blockGold.blockID;
 	private static final int frameBlockId = Block.brick.blockID;
+	private boolean isRedstonePowered = false;
+	
+	private portalColor portalColors;
 	private int direction = 0;
+	private boolean isActive = false;
 	
+	private Portal ownPortal;
 	
-	public TilePortalCore()
-	{
+	public TilePortalCore(){
+		this.portalColors = new portalColor(0,0,0);
+		this.ownPortal = new Portal();
 	}
 	
-	public boolean getIsValid()
-	{
+	public boolean getIsValid(){
 		return isValidMultiblock;
 	}
 	
-	public void invalidateMultiblock()
-	{
-		isValidMultiblock = false;
-		
-		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		metadata = metadata & BlockMultiFurnaceCore.MASK_DIR;
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
-		
-		revertDummies();
+	public void invalidateMultiblock(){
+		if(isValidMultiblock){ //To prevent infinite loops
+			isValidMultiblock = false;
+			
+			int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			metadata = metadata & PortalCoreBlock.MASK_DIR;
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
+			
+			revertDummies();
+		}
 	}
 	
 	/*
 	 * Checks for a complete portal in the direction of "direction"
 	 */
 	private boolean checkForPortal(int direction){
-		int portalX_neg = 0-(portalWidth-1)/2;
-		int portalX_pos = (portalWidth-1)/2;
+		int portalX_neg = 0-(Constants.portalWidth-1)/2;
+		int portalX_pos = (Constants.portalWidth-1)/2;
 		int portalY_neg = 0;
-		int portalY_pos = (portalHeight-1);
+		int portalY_pos = (Constants.portalHeight-1);
 		
 		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
+			LogHelper.log(Level.INFO, "Starting new row");
 			for(int vert = portalY_neg; vert <= portalY_pos; vert++){	// Vertical (Y)
 				int x = xCoord + (direction == 1 ? horiz : 0);
 				int y = yCoord + vert;
 				int z = zCoord + (direction == 0 ? horiz : 0);
 				boolean isCorner = false;
+				boolean isTopRow = false;
 				
 				int blockId = worldObj.getBlockId(x, y, z);
-				LogHelper.log(Level.INFO, "X: " + x + " Y: " + y + " ID: " + blockId);
+				LogHelper.log(Level.INFO, "X: " + x + 
+										  " Y: " + y + 
+										  " ID: " + blockId);
 				
 				//Check if we are at a corner
-				isCorner = ((horiz == portalX_neg || horiz == portalX_pos) && (vert == portalY_neg || vert == portalY_pos));
+				isCorner = ((horiz == portalX_neg || horiz == portalX_pos)
+						&& (vert == portalY_neg || vert == portalY_pos));
 				
 				if(isCorner && blockId != cornerBlockId){
 					return false;
 				}else if(isCorner){
 					continue;
+				}
+				
+				//If we are at top row, and not in a corner, we are looking at the wool
+				isTopRow = (!isCorner && (vert == portalY_pos));
+				
+				if(isTopRow && blockId == Block.cloth.blockID){
+					//Fetch the color of the wool.
+					if(horiz == -1){
+						this.portalColors.setColor(0, 
+								worldObj.getBlockMetadata(x, y, z)); 
+					}else if(horiz == 0){
+						this.portalColors.setColor(1, 
+								worldObj.getBlockMetadata(x, y, z)); 
+					}else if(horiz == 1){
+						this.portalColors.setColor(2, 
+								worldObj.getBlockMetadata(x, y, z)); 
+					}
+					continue;
+				}else if(isTopRow && blockId != Block.cloth.blockID){
+					return false;
 				}
 				
 				if(horiz == 0 && vert == 0){
@@ -106,11 +132,59 @@ public class TilePortalCore extends TileEntity {
 		return false;
 	}
 	
+	public void activatePortal(){
+		int portalX_neg = (0-(Constants.portalWidth-1)/2)+1;
+		int portalX_pos = ((Constants.portalWidth-1)/2)-1;
+		int portalY_neg = 1;
+		int portalY_pos = ((Constants.portalHeight-1)-1);
+		
+		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
+			for(int vert = portalY_neg; vert <= portalY_pos; vert++){	// Vertical (Y)
+				int x = xCoord + (direction == 1 ? horiz : 0);
+				int y = yCoord + vert;
+				int z = zCoord + (direction == 0 ? horiz : 0);
+				int blockIdToSet = Ids.portalPortalBlock_actual;
+				
+				
+				worldObj.setBlock(x, y, z, blockIdToSet);
+				worldObj.markBlockForUpdate(x, y, z);
+				TilePortalPortal dummyTE = (TilePortalPortal)worldObj.getBlockTileEntity(x, y, z);
+				if(dummyTE instanceof TilePortalPortal){
+					dummyTE.setCore(this);
+				}
+			}
+		}
+	}
+	
+
+	public void deactivatePortal() {
+		int portalX_neg = (0-(Constants.portalWidth-1)/2)+1;
+		int portalX_pos = ((Constants.portalWidth-1)/2)-1;
+		int portalY_neg = 1;
+		int portalY_pos = ((Constants.portalHeight-1)-1);
+		
+		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
+			for(int vert = portalY_neg; vert <= portalY_pos; vert++){	// Vertical (Y)
+				int x = xCoord + (direction == 1 ? horiz : 0);
+				int y = yCoord + vert;
+				int z = zCoord + (direction == 0 ? horiz : 0);
+				int blockIdToSet = 0;
+				
+				if(horiz == 0 && vert == 0){
+					continue; //Looking at core block, continue on
+				}
+				
+				worldObj.setBlock(x, y, z, blockIdToSet);
+				worldObj.markBlockForUpdate(x, y, z);
+			}
+		}
+	}
+	
 	public void convertDummies(){
-		int portalX_neg = 0-(portalWidth-1)/2;
-		int portalX_pos = (portalWidth-1)/2;
+		int portalX_neg = 0-(Constants.portalWidth-1)/2;
+		int portalX_pos = (Constants.portalWidth-1)/2;
 		int portalY_neg = 0;
-		int portalY_pos = (portalHeight-1);
+		int portalY_pos = (Constants.portalHeight-1);
 		
 		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
 			for(int vert = portalY_neg; vert <= portalY_pos; vert++){	// Vertical (Y)
@@ -118,6 +192,8 @@ public class TilePortalCore extends TileEntity {
 				int y = yCoord + vert;
 				int z = zCoord + (direction == 0 ? horiz : 0);
 				int blockIdToSet = Ids.portalDummyBlock_actual;
+				int blockId = worldObj.getBlockId(x, y, z);
+				int metaDataToSet = 0;
 				
 				if(horiz == 0 && vert == 0){
 					continue; //Looking at core block, continue on
@@ -125,27 +201,48 @@ public class TilePortalCore extends TileEntity {
 				if((horiz >= (portalX_neg + 1)) && (horiz <= (portalX_pos - 1))){
 					//Do leave the edge standing please
 					if((vert >= (portalY_neg + 1)) && (vert <= (portalY_pos - 1))){
-						blockIdToSet = Ids.portalPortalBlock_actual;
+						//blockIdToSet = Ids.portalPortalBlock_actual;
+						blockIdToSet = 0;
+						//Only do this if the portal is active!
 					}
+				}
+				//Check if current ID is wool, that should be reverted to the indicator:
+				//If we are at top row, and not in a corner, we are looking at the wool
+				if(blockId == Block.cloth.blockID){
+					//Fetch the color of the wool.
+					metaDataToSet = worldObj.getBlockMetadata(x, y, z);
+					blockIdToSet = Ids.portalIndicatorBlock_actual;
 				}
 				
 				worldObj.setBlock(x, y, z, blockIdToSet);
+				if(blockIdToSet == Ids.portalIndicatorBlock_actual){
+					worldObj.setBlockMetadataWithNotify(x, y, z, metaDataToSet, 2);
+				}
 				worldObj.markBlockForUpdate(x, y, z);
-				//if(blockIdToSet == Ids.portalDummyBlock_actual){
-				TilePortalDummy dummyTE = (TilePortalDummy)worldObj.getBlockTileEntity(x, y, z);
-				dummyTE.setCore(this);
-				//}
+				if(blockIdToSet == Ids.portalDummyBlock_actual){
+					TilePortalDummy dummyTE = (TilePortalDummy)worldObj.getBlockTileEntity(x, y, z);
+					dummyTE.setCore(this);
+				}
 			}
 		}
 		
 		isValidMultiblock = true;
+		//Create portal class
+		if(this.ownPortal != null){
+			this.ownPortal.close();
+		}
+		this.ownPortal = new Portal(worldObj, xCoord, yCoord, zCoord);
+		this.ownPortal.setColors(this.portalColors);
 	}
 	
+	
 	private void revertDummies(){
-		int portalX_neg = 0-(portalWidth-1)/2;
-		int portalX_pos = (portalWidth-1)/2;
+		int portalX_neg = 0-(Constants.portalWidth-1)/2;
+		int portalX_pos = (Constants.portalWidth-1)/2;
 		int portalY_neg = 0;
-		int portalY_pos = (portalHeight-1);
+		int portalY_pos = (Constants.portalHeight-1);
+		
+		portalColors = ownPortal.getColors();
 		
 		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
 			for(int vert = portalY_neg; vert <= portalY_pos; vert++){	// Vertical (Y)
@@ -153,10 +250,12 @@ public class TilePortalCore extends TileEntity {
 				int y = yCoord + vert;
 				int z = zCoord + (direction == 0 ? horiz : 0);
 				boolean isCorner = false;
-				int blockIdToSet = Block.brick.blockID;
+				boolean isTopRow = false;
 				
 				int blockId = worldObj.getBlockId(x, y, z);
 				isCorner = ((horiz == portalX_neg || horiz == portalX_pos) && (vert == portalY_neg || vert == portalY_pos));
+				
+				isTopRow = (!isCorner && (vert == portalY_pos));
 				
 				if(horiz == 0 && vert == 0)
 					continue;
@@ -164,6 +263,18 @@ public class TilePortalCore extends TileEntity {
 				if(blockId == Ids.portalDummyBlock_actual){
 					if(isCorner){
 						worldObj.setBlock(x, y, z, cornerBlockId);
+					}else if(isTopRow){
+						worldObj.setBlock(x, y, z, Block.cloth.blockID);
+						if(horiz == -1){
+							worldObj.setBlockMetadataWithNotify(x, y, z,
+								portalColors.getColor(0), 2);
+						}else if(horiz == 0){
+							worldObj.setBlockMetadataWithNotify(x, y, z,
+									portalColors.getColor(1), 2);
+						}else if(horiz == 1){
+							worldObj.setBlockMetadataWithNotify(x, y, z,
+									portalColors.getColor(2), 2);
+						}
 					}else{
 						worldObj.setBlock(x, y, z, frameBlockId);
 					}
@@ -175,5 +286,67 @@ public class TilePortalCore extends TileEntity {
 			}
 		}
 		isValidMultiblock = false;
+		if(this.ownPortal != null){
+			this.ownPortal.setInvalid();
+		}
 	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tagCompound){
+		super.readFromNBT(tagCompound);
+		
+		isValidMultiblock = tagCompound.getBoolean("isMultiBlock");
+		
+		if(isValidMultiblock){
+			if(this.ownPortal == null){
+				this.ownPortal = new Portal(worldObj, xCoord, yCoord, zCoord);
+			}
+			this.ownPortal.setWorldObj(worldObj);
+			this.ownPortal.readFromNBTData(tagCompound);
+		}
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tagCompound){
+		super.writeToNBT(tagCompound);
+		
+		tagCompound.setBoolean("isMultiBlock", isValidMultiblock);
+		
+		if(isValidMultiblock){
+			this.ownPortal.writeToNBT(tagCompound);
+		}
+	}
+	
+	public void redstoneChanged(boolean redstoneActive){
+		this.isActive = redstoneActive;
+		this.ownPortal.setWorldObj(worldObj);
+		if(redstoneActive){
+			if(this.ownPortal.getIsValid()){
+				this.ownPortal.activatePortal();
+			}
+		}else{
+			if(this.ownPortal.getIsValid()){
+				//it SHOULD be valid, but you'll never know for sure
+				this.ownPortal.deactivatePortal();
+			}
+		}
+	}
+
+	public Portal getMasterClass() {
+		return this.ownPortal;
+	}
+
+	public void checkRedstonePower() {
+		boolean isIndirectlyPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		if(isIndirectlyPowered && !isRedstonePowered){
+			LogHelper.log(Level.INFO, "Redstone change");
+			isRedstonePowered = true;
+			this.redstoneChanged(isRedstonePowered);
+		}else if(isRedstonePowered && !isIndirectlyPowered){
+			LogHelper.log(Level.INFO, "Redstone change");
+			isRedstonePowered = false;
+			this.redstoneChanged(isRedstonePowered);
+		}
+	}
+
 }

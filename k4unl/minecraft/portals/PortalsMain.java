@@ -9,6 +9,7 @@ import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Recipes;
 import k4unl.minecraft.portals.proxy.CommonProxy;
 import k4unl.minecraft.portals.tiles.Tiles;
+import k4unl.minecraft.portals.vars.PortalStorage;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler; 
 import cpw.mods.fml.common.Mod.Instance;
@@ -21,37 +22,38 @@ import cpw.mods.fml.common.network.NetworkMod;
 @Mod( modid = ModInfo.ID, name = ModInfo.NAME, version = ModInfo.VERSION) 
 @NetworkMod ( channels = {ModInfo.CHANNEL}, clientSideRequired = true, serverSideRequired = true )
 public class PortalsMain {
-
-        // The instance of the mod that Forge uses.
-        @Instance(value = "k4unlPortals")
-        public static PortalsMain instance;
-       
-        @SidedProxy( clientSide = ModInfo.PROXY_LOCATION + ".ClientProxy", serverSide = ModInfo.PROXY_LOCATION + ".CommonProxy")
-        public static CommonProxy proxy;
-        
-        @EventHandler 
-        public void preInit(FMLPreInitializationEvent event) {
-        	LogHelper.init();
-        	LogHelper.log(Level.INFO, "Starting K-4U Portals mod!");
-        	
-        	//Open configs
-        	ConfigHandler.init(event.getSuggestedConfigurationFile());
-        	
-        	//Load proxy. I still have no idea what this does.
-        	proxy.initRenderers();
-        	proxy.initSounds();
-        	
-        }
-       
-        @EventHandler 
-        public void load(FMLInitializationEvent event) {
-        	Blocks.init();
-        	Tiles.init();
-        	Recipes.init();
-        }
-       
-        @EventHandler
-        public void postInit(FMLPostInitializationEvent event) {
-                // Stub Method
-        }
+    // The instance of the mod that Forge uses.
+    @Instance(value = "k4unlPortals")
+    public static PortalsMain instance;
+   
+    @SidedProxy( clientSide = ModInfo.PROXY_LOCATION + ".ClientProxy", serverSide = ModInfo.PROXY_LOCATION + ".CommonProxy")
+    public static CommonProxy proxy;
+    
+    @EventHandler 
+    public void preInit(FMLPreInitializationEvent event) {
+    	LogHelper.init();
+    	LogHelper.log(Level.INFO, "Starting K-4U Portals mod!");
+    	
+    	//Open configs
+    	ConfigHandler.init(event.getSuggestedConfigurationFile());
+    	
+    	//Load proxy. I still have no idea what this does.
+    	proxy.initRenderers();
+    	proxy.initSounds();
+    	
+    }
+   
+    @EventHandler 
+    public void load(FMLInitializationEvent event) {
+    	Blocks.init();
+    	Tiles.init();
+    	Recipes.init();
+    	
+    	PortalStorage.init();
+    }
+   
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+            // Stub Method
+    }
 }

@@ -25,6 +25,7 @@ public class ConfigHandler {
 		Ids.portalCoreBlock_actual = config.getBlock(Names.portalCoreBlock_unlocalized, Ids.portalCoreBlock_default).getInt();
 		Ids.portalDummyBlock_actual = config.getBlock(Names.portalDummyBlock_unlocalized, Ids.portalDummyBlock_default).getInt();
 		Ids.portalPortalBlock_actual = config.getBlock(Names.portalPortalBlock_unlocalized, Ids.portalPortalBlock_default).getInt();
+		Ids.portalIndicatorBlock_actual = config.getBlock(Names.portalIndicatorBlock_unlocalized, Ids.portalIndicatorBlock_default).getInt();
 		
 		//Note! For items, do -256 on the value!
 	}

@@ -9,4 +9,7 @@ public class Names {
 	
 	public static final String portalPortalBlock_unlocalized = "portalPortal";
 	public static final String portalPortalBlock_name = "Portal";
+	
+	public static final String portalIndicatorBlock_unlocalized = "portalIndicator";
+	public static final String portalIndicatorBlock_name = "Portal Indicator";
 }
