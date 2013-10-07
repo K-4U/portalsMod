@@ -49,12 +49,12 @@ public class TilePortalDummy extends TileEntity{
 	public void checkRedstonePower() {
 		boolean isIndirectlyPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 		if(isIndirectlyPowered && !isRedstonePowered){
-			LogHelper.log(Level.INFO, "Redstone change");
+			//LogHelper.log(Level.INFO, "Redstone change");
 			isRedstonePowered = true;
 			TilePortalCore core = this.getCore();
 			core.redstoneChanged(isRedstonePowered);
 		}else if(isRedstonePowered && !isIndirectlyPowered){
-			LogHelper.log(Level.INFO, "Redstone change");
+			//LogHelper.log(Level.INFO, "Redstone change");
 			isRedstonePowered = false;
 			TilePortalCore core = this.getCore();
 			core.redstoneChanged(isRedstonePowered);

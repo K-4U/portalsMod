@@ -5,19 +5,22 @@ import java.util.logging.Level;
 import k4unl.minecraft.portals.blocks.Blocks;
 import k4unl.minecraft.portals.lib.ConfigHandler;
 import k4unl.minecraft.portals.lib.LogHelper;
+import k4unl.minecraft.portals.lib.TickHandler;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Recipes;
 import k4unl.minecraft.portals.proxy.CommonProxy;
 import k4unl.minecraft.portals.tiles.Tiles;
 import k4unl.minecraft.portals.vars.PortalStorage;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler; 
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
  
 @Mod( modid = ModInfo.ID, name = ModInfo.NAME, version = ModInfo.VERSION) 
 @NetworkMod ( channels = {ModInfo.CHANNEL}, clientSideRequired = true, serverSideRequired = true )
@@ -45,6 +48,8 @@ public class PortalsMain {
    
     @EventHandler 
     public void load(FMLInitializationEvent event) {
+    	TickRegistry.registerTickHandler(new TickHandler(), Side.CLIENT);
+    	
     	Blocks.init();
     	Tiles.init();
     	Recipes.init();

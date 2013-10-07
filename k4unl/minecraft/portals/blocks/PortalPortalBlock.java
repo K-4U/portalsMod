@@ -3,10 +3,12 @@ package k4unl.minecraft.portals.blocks;
 import java.util.logging.Level;
 
 import k4unl.minecraft.portals.lib.LogHelper;
+import k4unl.minecraft.portals.lib.config.Constants;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
 import k4unl.minecraft.portals.tiles.TilePortalPortal;
+import k4unl.minecraft.portals.vars.Types.Location;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -14,6 +16,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -102,6 +105,9 @@ public class PortalPortalBlock extends BlockContainer {
     		TilePortalPortal dummy = (TilePortalPortal)world.getBlockTileEntity(x, y, z);
     		if(dummy != null && dummy.getCore() != null)
     			dummy.getCore().getMasterClass().teleport((EntityPlayer)colEntity); //Yay for infinite loops! :D
+    		
+    		NBTTagCompound playerData = colEntity.getEntityData();
+			playerData.setInteger(Constants.NBTTags.entTeleportedAgo, 1);
     	}
     	
     	super.onEntityCollidedWithBlock(world, x, y, z, colEntity);

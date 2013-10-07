@@ -1,10 +1,13 @@
 package k4unl.minecraft.portals.blocks;
 
+import java.util.EnumSet;
+import java.util.Random;
+
+import cpw.mods.fml.common.ITickHandler;
+import cpw.mods.fml.common.TickType;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
-import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
-import k4unl.minecraft.portals.tiles.TilePortalDummy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -34,11 +37,19 @@ public class PortalCoreBlock extends BlockContainer {
 		setHardness(3.5f);
 		setCreativeTab(CreativeTabs.tabDecorations); //For now
 		
+		setTickRandomly(true);
+		
 	}
 
 	@Override
+	public void updateTick(World world, int x, int y, int z, Random random) {
+		//Sent it to the tile, which sends it to the class
+		TilePortalCore tile = (TilePortalCore) world.getBlockTileEntity(x, y, z);
+		tile.getMasterClass().randomTick(world, x, y, z, random);
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World world) {
-		// TODO Auto-generated method stub
 		return new TilePortalCore();
 	}
 
@@ -86,10 +97,6 @@ public class PortalCoreBlock extends BlockContainer {
 			}
 				//player.openGui(MultiFurnaceMod.instance, ModConfig.GUIIDs.multiFurnace, world, x, y, z);
 		}
-		
-		
-		//TODO: DEBUG!
-		//Functions.teleportPlayer(player, 45, 18, 574);
 		
 		return true;
 	}	

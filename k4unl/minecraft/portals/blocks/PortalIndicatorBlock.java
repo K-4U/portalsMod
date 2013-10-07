@@ -70,7 +70,8 @@ public class PortalIndicatorBlock extends BlockContainer{
 					core.setColor(core.getIndicatorNumber(x,y,z), getBlockFromDye(player.getCurrentEquippedItem().getItemDamage()));
 				}
 			}else{
-				return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
+				//return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
+				return false;
 			}
 		}
 		

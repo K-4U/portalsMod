@@ -4,9 +4,9 @@ import java.util.logging.Level;
 
 import k4unl.minecraft.portals.blocks.PortalCoreBlock;
 import k4unl.minecraft.portals.lib.LogHelper;
-import k4unl.minecraft.portals.lib.config.Ids;
-import k4unl.minecraft.portals.vars.PortalStorage.Portal;
 import k4unl.minecraft.portals.lib.config.Constants;
+import k4unl.minecraft.portals.lib.config.Ids;
+import k4unl.minecraft.portals.vars.Portal;
 import k4unl.minecraft.portals.vars.Types.portalColor;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -140,7 +140,7 @@ public class TilePortalCore extends TileEntity {
 		if(this.isActive){
 			//Deactivate portal
 			if(this.ownPortal.getIsValid()){
-				//it SHOULD be valid, but you'll never know for sure
+				//it SHOULD be valid, but you'll never know for surewwwww
 				this.ownPortal.deactivatePortal();
 			}
 		}
@@ -389,9 +389,6 @@ public class TilePortalCore extends TileEntity {
 				return diff + 1;
 			}
 		}
-		//int x = xCoord + (direction == 1 ? horiz : 0);
-		//int y = yCoord + vert;
-		//int z = zCoord + (direction == 0 ? horiz : 0);
 		return 0;
 	}
 

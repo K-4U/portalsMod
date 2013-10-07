@@ -34,7 +34,6 @@ public class PortalDummyBlock extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		// TODO Auto-generated method stub
 		return new TilePortalDummy();
 	}
 
@@ -62,7 +61,7 @@ public class PortalDummyBlock extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		if(player.isSneaking())
+		/*if(player.isSneaking())
 			return false;
 		
 		TilePortalDummy dummy = (TilePortalDummy)world.getBlockTileEntity(x, y, z);
@@ -70,10 +69,10 @@ public class PortalDummyBlock extends BlockContainer {
 		if(dummy != null && dummy.getCore() != null)
 		{
 			TilePortalCore core = dummy.getCore();
-			return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
-		}
+			//return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
+		}*/
 		
-		return true;
+		return false;
 	}
 	
 	@SideOnly(Side.CLIENT)

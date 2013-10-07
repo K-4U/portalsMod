@@ -54,6 +54,14 @@ public class Types {
 			this.z = z;
 		}
 		
+		public Location(int[] coords) {
+			if(coords.length >= 2){
+				this.x = coords[0];
+				this.y = coords[1];
+				this.z = coords[2];
+			}
+		}
+		
 		public boolean equals(Location toTest){
 			if(this.x == toTest.x && this.y == toTest.y && this.z == toTest.z){
 				return true;
@@ -65,6 +73,12 @@ public class Types {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+		}
+		
+		public void setLocation(int[] coords) {
+			this.x = coords[0];
+			this.y = coords[1];
+			this.z = coords[2];
 		}
 		
 		public int getX(){
@@ -89,6 +103,14 @@ public class Types {
 		
 		public void setZ(int newZ){
 			this.z = newZ;
+		}
+
+		public int[] getLocation() {
+			int[] ret = new int[3];
+			ret[0] = this.x;
+			ret[1] = this.y;
+			ret[2] = this.z;
+			return ret;
 		}
 	}
 }
