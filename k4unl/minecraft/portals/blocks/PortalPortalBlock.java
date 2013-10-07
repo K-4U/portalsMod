@@ -95,15 +95,13 @@ public class PortalPortalBlock extends BlockContainer {
         return false;
     }
     
+    @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity colEntity){
-    	//The problem here being that this actually won't return the portal
-    	//The coördinates supplied by this function are actually the coördinates
-    	//of the entity trying to pass.
     	if(colEntity instanceof EntityPlayerMP || colEntity instanceof EntityPlayerSP){
     		//For now, just players plox
     		TilePortalPortal dummy = (TilePortalPortal)world.getBlockTileEntity(x, y, z);
     		if(dummy != null && dummy.getCore() != null)
-    			dummy.getCore().getMasterClass().teleport(colEntity);
+    			dummy.getCore().getMasterClass().teleport((EntityPlayer)colEntity); //Yay for infinite loops! :D
     	}
     	
     	super.onEntityCollidedWithBlock(world, x, y, z, colEntity);
@@ -113,8 +111,12 @@ public class PortalPortalBlock extends BlockContainer {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int oldBlockId, int par6){
 		TilePortalPortal dummy = (TilePortalPortal)world.getBlockTileEntity(x, y, z);
-		if(dummy != null && dummy.getCore() != null)
-			dummy.getCore().getMasterClass().deactivatePortal();
+		if(dummy != null && dummy.getCore() != null){
+			if(dummy.getCore().getIsActive()){
+				dummy.getCore().getMasterClass().deactivatePortal();
+			}
+		}
+			
 		
 		super.breakBlock(world, x, y, z, oldBlockId, par6);
 	}

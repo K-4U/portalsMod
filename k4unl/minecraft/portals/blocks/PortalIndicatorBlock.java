@@ -54,17 +54,24 @@ public class PortalIndicatorBlock extends BlockContainer{
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-	{
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9){
 		if(player.isSneaking())
 			return false;
 		
+		
+		
 		TilePortalIndicator dummy = (TilePortalIndicator)world.getBlockTileEntity(x, y, z);
 		
-		if(dummy != null && dummy.getCore() != null)
-		{
+		if(dummy != null && dummy.getCore() != null){
 			TilePortalCore core = dummy.getCore();
-			return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
+			if (player.getCurrentEquippedItem() != null) {
+				if (player.getCurrentEquippedItem().getItem() instanceof ItemDye) {
+					
+					core.setColor(core.getIndicatorNumber(x,y,z), getBlockFromDye(player.getCurrentEquippedItem().getItemDamage()));
+				}
+			}else{
+				return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
+			}
 		}
 		
 		return true;

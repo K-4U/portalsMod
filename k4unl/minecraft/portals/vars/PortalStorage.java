@@ -1,12 +1,12 @@
 package k4unl.minecraft.portals.vars;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
 import k4unl.minecraft.portals.vars.Types.Location;
 import k4unl.minecraft.portals.vars.Types.portalColor;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -128,13 +128,10 @@ public class PortalStorage {
 			return this.portalLocation;
 		}
 		
-		public void setColors(portalColor newColors){
-			portalColors = newColors;
-			int sameColors = PortalStorage.getPortalCountByColor(this.portalColors); 
-			if(sameColors > 2){
-				//Error! Cannot form!
-				isValid = false;
-				cannotFormReason = 1;
+		private void checkLink(){
+			int sameColors = PortalStorage.getPortalCountByColor(this.portalColors);
+			if(sameColors > 2 || sameColors == 1){
+				isLinked = false;
 			}else if(sameColors == 2){ // 2, this one counts as well
 				//Link the portals together
 				Portal linkedPortal = PortalStorage.getPortalByColor(this, 
@@ -142,6 +139,11 @@ public class PortalStorage {
 				linkedPortal.link(this);
 				this.link(linkedPortal);
 			}
+		}
+		
+		public void setColors(portalColor newColors){
+			portalColors = newColors;
+			this.checkLink();
 		}
 		
 		public portalColor getColors(){
@@ -166,6 +168,9 @@ public class PortalStorage {
 				this.activatePortal();
 			}
 			portalColors = new portalColor(data.getIntArray("portalColors"));
+			
+			//Recheck link
+			this.checkLink();
 		}
 
 		public void writeToNBT(NBTTagCompound data) {
@@ -231,14 +236,20 @@ public class PortalStorage {
 			//in your head by now
 		}
 
-		public void teleport(Entity colEntity) {
+		public void teleport(EntityPlayer colEntity) {
 			//Check everything
 			//It is almost impossible for this portal not to be linked,
 			//But, please do check
 			if(getIsValid()){
 				Location linkedLocation = linkedPortal.getLocation();
-				colEntity.setPosition(linkedLocation.getX(), 
-						linkedLocation.getY(), linkedLocation.getZ());
+				//For now, we can only teleport players, so:
+				//Okay, we should do another location here
+				//Else, the entity will end up in the collision of the portal on the other end.
+				//Which will cause it to teleport again..
+				//Functions.teleportPlayer(colEntity, linkedLocation.getX(), 
+				//		linkedLocation.getY(), linkedLocation.getZ());
+				//colEntity.setPosition(linkedLocation.getX(), 
+				//		linkedLocation.getY(), linkedLocation.getZ());
 				//Play some sounds
 				//do fancy stuff
 				//show particles!

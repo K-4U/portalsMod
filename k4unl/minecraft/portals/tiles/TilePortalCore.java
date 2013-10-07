@@ -34,6 +34,10 @@ public class TilePortalCore extends TileEntity {
 		return isValidMultiblock;
 	}
 	
+	public boolean getIsActive(){
+		return isActive;
+	}
+	
 	public void invalidateMultiblock(){
 		if(isValidMultiblock){ //To prevent infinite loops
 			isValidMultiblock = false;
@@ -132,6 +136,26 @@ public class TilePortalCore extends TileEntity {
 		return false;
 	}
 	
+	public void setColor(int index, int newColor){
+		if(this.isActive){
+			//Deactivate portal
+			if(this.ownPortal.getIsValid()){
+				//it SHOULD be valid, but you'll never know for sure
+				this.ownPortal.deactivatePortal();
+			}
+		}
+		this.portalColors.setColor(index, newColor);
+		this.ownPortal.setColors(this.portalColors);
+		//Also, update the child up there.
+		int horiz = index - 1;
+		int vert = Constants.portalHeight-1;
+		int x = xCoord + (direction == 1 ? horiz : 0);
+		int y = yCoord + vert;
+		int z = zCoord + (direction == 0 ? horiz : 0);
+		
+		worldObj.setBlockMetadataWithNotify(x, y, z, newColor, 2); //Curious to see if this works
+	}
+	
 	public void activatePortal(){
 		int portalX_neg = (0-(Constants.portalWidth-1)/2)+1;
 		int portalX_pos = ((Constants.portalWidth-1)/2)-1;
@@ -154,10 +178,12 @@ public class TilePortalCore extends TileEntity {
 				}
 			}
 		}
+		this.isActive = true;
 	}
 	
 
 	public void deactivatePortal() {
+		this.isActive = false;
 		int portalX_neg = (0-(Constants.portalWidth-1)/2)+1;
 		int portalX_pos = ((Constants.portalWidth-1)/2)-1;
 		int portalY_neg = 1;
@@ -302,7 +328,7 @@ public class TilePortalCore extends TileEntity {
 		isValidMultiblock = tagCompound.getBoolean("isMultiBlock");
 		
 		if(isValidMultiblock){
-			if(this.ownPortal == null){
+			if(this.ownPortal.getIsValid() == false){
 				this.ownPortal = new Portal(worldObj, xCoord, yCoord, zCoord);
 			}
 			this.ownPortal.setWorldObj(worldObj);
@@ -351,6 +377,22 @@ public class TilePortalCore extends TileEntity {
 			isRedstonePowered = false;
 			this.redstoneChanged(isRedstonePowered);
 		}
+	}
+
+	public int getIndicatorNumber(int x, int y, int z) {
+		if(y == (yCoord + Constants.portalHeight)-1){
+			if(direction == 1){
+				int diff = x - xCoord;
+				return diff + 1;
+			}else{
+				int diff = z - zCoord;
+				return diff + 1;
+			}
+		}
+		//int x = xCoord + (direction == 1 ? horiz : 0);
+		//int y = yCoord + vert;
+		//int z = zCoord + (direction == 0 ? horiz : 0);
+		return 0;
 	}
 
 }
