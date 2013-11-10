@@ -217,7 +217,7 @@ public class TilePortalCore extends TileEntity {
 				int x = xCoord + (direction == 1 ? horiz : 0);
 				int y = yCoord + vert;
 				int z = zCoord + (direction == 0 ? horiz : 0);
-				int blockIdToSet = Ids.portalDummyBlock_actual;
+				int blockIdToSet = Ids.portalFrameBlock_actual;
 				int blockId = worldObj.getBlockId(x, y, z);
 				int metaDataToSet = 0;
 				
@@ -248,8 +248,8 @@ public class TilePortalCore extends TileEntity {
 				if(blockIdToSet == Ids.portalIndicatorBlock_actual){
 					TilePortalIndicator dummyTE = (TilePortalIndicator)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);
-				}else if(blockIdToSet == Ids.portalDummyBlock_actual){
-					TilePortalDummy dummyTE = (TilePortalDummy)worldObj.getBlockTileEntity(x, y, z);
+				}else if(blockIdToSet == Ids.portalFrameBlock_actual){
+					TilePortalFrame dummyTE = (TilePortalFrame)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);	
 				}
 			}
@@ -289,7 +289,7 @@ public class TilePortalCore extends TileEntity {
 				if(horiz == 0 && vert == 0)
 					continue;
 				
-				if(blockId == Ids.portalDummyBlock_actual || 
+				if(blockId == Ids.portalFrameBlock_actual || 
 						blockId == Ids.portalIndicatorBlock_actual){
 					if(isCorner){
 						worldObj.setBlock(x, y, z, cornerBlockId);

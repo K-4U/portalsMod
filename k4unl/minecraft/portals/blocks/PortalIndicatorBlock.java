@@ -2,11 +2,12 @@ package k4unl.minecraft.portals.blocks;
 
 import java.util.List;
 
+import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.lib.config.Ids;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
-import k4unl.minecraft.portals.tiles.TilePortalDummy;
+import k4unl.minecraft.portals.tiles.TilePortalFrame;
 import k4unl.minecraft.portals.tiles.TilePortalIndicator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,11 +31,10 @@ public class PortalIndicatorBlock extends BlockContainer{
 	public PortalIndicatorBlock(int id) {
 		super(id, Material.iron);
 		
-		setUnlocalizedName(Names.portalDummyBlock_unlocalized);
+		setUnlocalizedName(Names.portalIndicatorBlock_unlocalized);
 		setStepSound(Block.soundStoneFootstep);
 		setHardness(3.5f);
 		setCreativeTab(CreativeTabs.tabDecorations); //For now
-		
 	}
 
 	@Override
@@ -122,12 +122,7 @@ public class PortalIndicatorBlock extends BlockContainer{
 		return ~par0 & 15;
 	}
 
-	/**
-	 * Takes a block damage value and returns the dye damage value to match
-	 */
-	public static int getDyeFromBlock(int par0) {
-		return ~par0 & 15;
-	}
+
 
 	@SideOnly(Side.CLIENT)
 	/**
@@ -153,9 +148,9 @@ public class PortalIndicatorBlock extends BlockContainer{
 					ModInfo.ID.toLowerCase() + ":" 
 					+ Names.portalIndicatorBlock_unlocalized
 					+ "_"
-					+ ItemDye.dyeItemNames[getDyeFromBlock(i)]);
+					+ ItemDye.dyeItemNames[Functions.getDyeFromBlock(i)]);
 		}
-		topIcon = iconRegister.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalDummyBlock_unlocalized);
+		topIcon = iconRegister.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalFrameBlock_unlocalized);
 	}
 	
 }

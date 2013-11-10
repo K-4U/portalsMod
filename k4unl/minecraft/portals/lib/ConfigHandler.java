@@ -23,7 +23,7 @@ public class ConfigHandler {
 	
 	private static void handleIDs(){
 		Ids.portalCoreBlock_actual = config.getBlock(Names.portalCoreBlock_unlocalized, Ids.portalCoreBlock_default).getInt();
-		Ids.portalDummyBlock_actual = config.getBlock(Names.portalDummyBlock_unlocalized, Ids.portalDummyBlock_default).getInt();
+		Ids.portalFrameBlock_actual = config.getBlock(Names.portalFrameBlock_unlocalized, Ids.portalFrameBlock_default).getInt();
 		Ids.portalPortalBlock_actual = config.getBlock(Names.portalPortalBlock_unlocalized, Ids.portalPortalBlock_default).getInt();
 		Ids.portalIndicatorBlock_actual = config.getBlock(Names.portalIndicatorBlock_unlocalized, Ids.portalIndicatorBlock_default).getInt();
 		

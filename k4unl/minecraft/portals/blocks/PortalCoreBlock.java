@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 
 public class PortalCoreBlock extends BlockContainer {
@@ -27,7 +28,8 @@ public class PortalCoreBlock extends BlockContainer {
 	public static final int META_DIR_EAST = 0x00000003;
 	public static final int META_DIR_WEST = 0x00000000;
 	
-	public static Icon blockIcon;
+	public static Icon capIcon;
+	public static Icon sideIcon;
 	
 	public PortalCoreBlock(int id) {
 		super(id, Material.iron);
@@ -55,12 +57,17 @@ public class PortalCoreBlock extends BlockContainer {
 
 	@Override
 	public void registerIcons(IconRegister icon) {
-		blockIcon = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized);
+		sideIcon = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_sides");
+		capIcon = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_top");
 	}
 	
 	@Override
 	public Icon getIcon(int side, int metadata) {
-		return blockIcon;
+		ForgeDirection s = ForgeDirection.getOrientation(side);
+		if(s == ForgeDirection.UP || s == ForgeDirection.DOWN){
+			return capIcon;
+		}
+		return sideIcon;
 	}
 	
 	@Override

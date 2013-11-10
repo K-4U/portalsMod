@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 
-public class TilePortalDummy extends TileEntity{
+public class TilePortalFrame extends TileEntity{
 	TilePortalCore tileCore;
 	int coreX;
 	int coreY;

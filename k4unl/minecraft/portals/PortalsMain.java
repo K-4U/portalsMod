@@ -9,6 +9,7 @@ import k4unl.minecraft.portals.lib.TickHandler;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Recipes;
 import k4unl.minecraft.portals.proxy.CommonProxy;
+import k4unl.minecraft.portals.renderers.Renderers;
 import k4unl.minecraft.portals.tiles.Tiles;
 import k4unl.minecraft.portals.vars.PortalStorage;
 import cpw.mods.fml.common.Mod;
@@ -53,8 +54,12 @@ public class PortalsMain {
     	Blocks.init();
     	Tiles.init();
     	Recipes.init();
+    	Renderers.init();
+    	
     	
     	PortalStorage.init();
+    	
+    	
     }
    
     @EventHandler

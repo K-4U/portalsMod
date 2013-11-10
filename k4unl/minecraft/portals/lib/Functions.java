@@ -11,4 +11,11 @@ public class Functions {
 		player.setPositionAndUpdate(targetX, targetY, targetZ);
 		//player.playerNetServerHandler.setPlayerLocation(targetX, targetY, targetZ, player.rotationYaw, player.rotationPitch);
 	}
+	
+	/**
+	 * Takes a block damage value and returns the dye damage value to match
+	 */
+	public static int getDyeFromBlock(int par0) {
+		return ~par0 & 15;
+	}
 }

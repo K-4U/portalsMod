@@ -1,5 +1,7 @@
 package k4unl.minecraft.portals.blocks;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import k4unl.minecraft.portals.lib.config.Ids;
@@ -7,39 +9,39 @@ import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
-import k4unl.minecraft.portals.tiles.TilePortalDummy;
+import k4unl.minecraft.portals.tiles.TilePortalFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 
 
-public class PortalDummyBlock extends BlockContainer {
+public class PortalFrameBlock extends BlockContainer {
 	public static Icon blockIcon;
 	
-	public PortalDummyBlock(int id) {
+	public PortalFrameBlock(int id) {
 		super(id, Material.iron);
 		
-		setUnlocalizedName(Names.portalDummyBlock_unlocalized);
+		setUnlocalizedName(Names.portalFrameBlock_unlocalized);
 		setStepSound(Block.soundStoneFootstep);
 		setHardness(3.5f);
 		setCreativeTab(CreativeTabs.tabDecorations); //For now
-		
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return new TilePortalDummy();
+		return new TilePortalFrame();
 	}
 
 	@Override
 	public void registerIcons(IconRegister icon) {
-		blockIcon = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalDummyBlock_unlocalized);
+		blockIcon = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalFrameBlock_unlocalized);
 	}
 	
 	@Override
@@ -50,10 +52,10 @@ public class PortalDummyBlock extends BlockContainer {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
 	{
-		TilePortalDummy dummy = (TilePortalDummy)world.getBlockTileEntity(x, y, z);
+		TilePortalFrame frame = (TilePortalFrame)world.getBlockTileEntity(x, y, z);
 		
-		if(dummy != null && dummy.getCore() != null)
-			dummy.getCore().invalidateMultiblock();
+		if(frame != null && frame.getCore() != null)
+			frame.getCore().invalidateMultiblock();
 		
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
@@ -85,7 +87,31 @@ public class PortalDummyBlock extends BlockContainer {
 				int z, int blockId) {
 		super.onNeighborBlockChange(world, x, y, z, blockId);
 		
-		TilePortalDummy tile = (TilePortalDummy) world.getBlockTileEntity(x, y, z);
-		tile.checkRedstonePower();
+		TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
+		frame.checkRedstonePower();
+	}
+	
+	@Override
+	public void getSubBlocks(int id, CreativeTabs tab, List list) {
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
+	}
+	
+	@Override
+	public int damageDropped(int meta) {
+		return meta;
+	}
+	
+	@Override
+	public int getRenderType(){
+		return -1;
+	}
+	
+	public boolean isOpaqueCube(){
+		return false;
+	}
+	
+	public boolean renderAsNormalBlock(){
+		return false;
 	}
 }
