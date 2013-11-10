@@ -50,8 +50,7 @@ public class PortalFrameBlock extends BlockContainer {
 	}
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-	{
+	public void breakBlock(World world, int x, int y, int z, int par5, int par6){
 		TilePortalFrame frame = (TilePortalFrame)world.getBlockTileEntity(x, y, z);
 		
 		if(frame != null && frame.getCore() != null)
@@ -89,17 +88,6 @@ public class PortalFrameBlock extends BlockContainer {
 		
 		TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
 		frame.checkRedstonePower();
-	}
-	
-	@Override
-	public void getSubBlocks(int id, CreativeTabs tab, List list) {
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
-	}
-	
-	@Override
-	public int damageDropped(int meta) {
-		return meta;
 	}
 	
 	@Override

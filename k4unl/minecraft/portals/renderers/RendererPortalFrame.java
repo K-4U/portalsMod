@@ -1,9 +1,10 @@
 package k4unl.minecraft.portals.renderers;
 
 import k4unl.minecraft.portals.lib.config.ModInfo;
-import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.models.ModelPortalFrame;
+import k4unl.minecraft.portals.tiles.TilePortalFrame;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -19,7 +20,7 @@ public class RendererPortalFrame extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {
 		//Open the GL matrix
 		GL11.glPushMatrix();
 		//The halve floats are added because else the model would be offsetted.
@@ -34,9 +35,15 @@ public class RendererPortalFrame extends TileEntitySpecialRenderer {
 		
 		
 		GL11.glPushMatrix();
+		
+		TilePortalFrame frame = (TilePortalFrame) tileEntity;
+		portalFrame.setConnectedSides(frame.getConnectedSides());
+		
+		
 		//it' s 1/16.
 		//There's 16 pixel in 1 block.
-		portalFrame.renderModel(0.0625F);
+		//portalFrame.render(tileEntity, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 1F/16F);
+		this.portalFrame.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();

@@ -30,17 +30,17 @@ public class Blocks {
 	public static void registerBlocks(){
 		GameRegistry.registerBlock(portalCoreBlockInst, Names.portalCoreBlock_unlocalized);
 		GameRegistry.registerBlock(portalPortalBlockInst, Names.portalPortalBlock_unlocalized);
+		GameRegistry.registerBlock(portalFrameBlockInst, Names.portalFrameBlock_unlocalized);
 		GameRegistry.registerBlock(portalIndicatorBlockInst, PortalIndicatorBlockHandler.class);
 		
-		GameRegistry.registerBlock(portalFrameBlockInst, PortalFrameBlockHandler.class);
+		
 		
 	}
 	
 	public static void addNames() {
 		LanguageRegistry.addName(portalCoreBlockInst, Names.portalCoreBlock_name);
 		
-		LanguageRegistry.addName(new ItemStack(portalFrameBlockInst, 1, 0), Names.portalFrameBlock_name);
-		LanguageRegistry.addName(new ItemStack(portalFrameBlockInst, 1, 1), Names.portalFrameCornerBlock_name);
+		LanguageRegistry.addName(portalFrameBlockInst, Names.portalFrameBlock_name);
 		
 		for (int i = 0; i < 16; ++i) {
 			String dyeName = ItemDye.dyeItemNames[Functions.getDyeFromBlock(i)];

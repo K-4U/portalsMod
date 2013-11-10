@@ -1,10 +1,7 @@
 package k4unl.minecraft.portals.blocks;
 
-import java.util.EnumSet;
 import java.util.Random;
 
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
@@ -16,6 +13,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -69,6 +67,11 @@ public class PortalCoreBlock extends BlockContainer {
 		}
 		return sideIcon;
 	}
+	
+	@Override
+	public boolean canConnectRedstone(IBlockAccess iba, int i, int j, int k, int dir){
+		return true;
+    }
 	
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y,
