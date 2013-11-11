@@ -97,8 +97,7 @@ public class PortalCoreBlock extends BlockContainer {
 				if(tileEntity.checkIfProperlyFormed())
 				{
 					tileEntity.convertDummies();
-					if(world.isRemote)
-						player.addChatMessage("Portal created");
+					player.addChatMessage("Portal created!");
 				}
 			}
 			

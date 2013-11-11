@@ -153,4 +153,17 @@ public class PortalIndicatorBlock extends BlockContainer{
 		topIcon = iconRegister.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalFrameBlock_unlocalized);
 	}
 	
+	@Override
+	public int getRenderType(){
+		return -1;
+	}
+	
+	public boolean isOpaqueCube(){
+		return false;
+	}
+	
+	public boolean renderAsNormalBlock(){
+		return false;
+	}
+	
 }

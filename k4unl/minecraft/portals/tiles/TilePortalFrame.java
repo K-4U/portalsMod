@@ -31,10 +31,6 @@ public class TilePortalFrame extends TileEntity{
 		return tileCore;
 	}
 	
-	public boolean isCorner(){
-		return false;
-	}
-	
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
 		super.readFromNBT(tagCompound);

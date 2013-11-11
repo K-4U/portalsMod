@@ -85,9 +85,9 @@ public class PortalFrameBlock extends BlockContainer {
 	public void onNeighborBlockChange(World world, int x, int y,
 				int z, int blockId) {
 		super.onNeighborBlockChange(world, x, y, z, blockId);
-		
+		/*
 		TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
-		frame.checkRedstonePower();
+		frame.checkRedstonePower();*/
 	}
 	
 	@Override

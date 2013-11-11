@@ -9,14 +9,15 @@ import k4unl.minecraft.portals.lib.config.Ids;
 import k4unl.minecraft.portals.vars.Portal;
 import k4unl.minecraft.portals.vars.Types.portalColor;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public class TilePortalCore extends TileEntity {
 	private boolean isValidMultiblock;
 
-	private static final int cornerBlockId = Block.blockGold.blockID;
-	private static final int frameBlockId = Block.brick.blockID;
+	private static final int cornerBlockId = Ids.portalFrameBlock_actual;
+	private static final int frameBlockId = Ids.portalFrameBlock_actual;
 	private boolean isRedstonePowered = false;
 	
 	private portalColor portalColors;
@@ -86,7 +87,7 @@ public class TilePortalCore extends TileEntity {
 				//If we are at top row, and not in a corner, we are looking at the wool
 				isTopRow = (!isCorner && (vert == portalY_pos));
 				
-				if(isTopRow && blockId == Block.cloth.blockID){
+				if(isTopRow && blockId == Ids.portalIndicatorBlock_actual){
 					//Fetch the color of the wool.
 					if(horiz == -1){
 						this.portalColors.setColor(0, 
@@ -207,6 +208,8 @@ public class TilePortalCore extends TileEntity {
 	}
 	
 	public void convertDummies(){
+		//Because we are now using a portal Frame. We no longer need to convert the blocks.
+		
 		int portalX_neg = 0-(Constants.portalWidth-1)/2;
 		int portalX_pos = (Constants.portalWidth-1)/2;
 		int portalY_neg = 0;
@@ -234,28 +237,27 @@ public class TilePortalCore extends TileEntity {
 				}
 				//Check if current ID is wool, that should be reverted to the indicator:
 				//If we are at top row, and not in a corner, we are looking at the wool
-				if(blockId == Block.cloth.blockID){
+				/*if(blockId == Block.cloth.blockID){
 					//Fetch the color of the wool.
 					metaDataToSet = worldObj.getBlockMetadata(x, y, z);
 					blockIdToSet = Ids.portalIndicatorBlock_actual;
-				}
+				}*/
 				
-				worldObj.setBlock(x, y, z, blockIdToSet);
-				if(blockIdToSet == Ids.portalIndicatorBlock_actual){
-					worldObj.setBlockMetadataWithNotify(x, y, z, metaDataToSet, 2);
-				}
-				worldObj.markBlockForUpdate(x, y, z);
-				if(blockIdToSet == Ids.portalIndicatorBlock_actual){
+				//worldObj.setBlock(x, y, z, blockIdToSet);
+				//if(blockId == Ids.portalIndicatorBlock_actual){
+				//	worldObj.setBlockMetadataWithNotify(x, y, z, metaDataToSet, 2);
+				//}
+				//worldObj.markBlockForUpdate(x, y, z);
+				if(blockId == Ids.portalIndicatorBlock_actual){
 					TilePortalIndicator dummyTE = (TilePortalIndicator)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);
-				}else if(blockIdToSet == Ids.portalFrameBlock_actual){
+				}else if(blockId == Ids.portalFrameBlock_actual){
 					TilePortalFrame dummyTE = (TilePortalFrame)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);	
 				}
 			}
 		}
-		
-		isValidMultiblock = true;
+		this.isValidMultiblock = true;
 		//Create portal class
 		if(this.ownPortal != null){
 			this.ownPortal.close();
@@ -266,7 +268,7 @@ public class TilePortalCore extends TileEntity {
 	
 	
 	private void revertDummies(){
-		int portalX_neg = 0-(Constants.portalWidth-1)/2;
+		/*int portalX_neg = 0-(Constants.portalWidth-1)/2;
 		int portalX_pos = (Constants.portalWidth-1)/2;
 		int portalY_neg = 0;
 		int portalY_pos = (Constants.portalHeight-1);
@@ -315,10 +317,12 @@ public class TilePortalCore extends TileEntity {
 				worldObj.markBlockForUpdate(x, y, z);
 			}
 		}
-		isValidMultiblock = false;
+		*/
+		this.isValidMultiblock = false;
 		if(this.ownPortal != null){
 			this.ownPortal.setInvalid();
 		}
+		Minecraft.getMinecraft().thePlayer.addChatMessage("Portal destroyed");
 	}
 	
 	@Override

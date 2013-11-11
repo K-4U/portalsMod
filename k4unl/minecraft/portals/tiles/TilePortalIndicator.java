@@ -1,7 +1,9 @@
 package k4unl.minecraft.portals.tiles;
 
+import java.awt.Color;
 import java.util.logging.Level;
 
+import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.lib.LogHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -59,5 +61,9 @@ public class TilePortalIndicator extends TileEntity{
 			TilePortalCore core = this.getCore();
 			core.redstoneChanged(isRedstonePowered);
 		}
+	}
+
+	public Color getColor() {
+		return Functions.dye2Rgb(Functions.getDyeFromBlock(worldObj.getBlockMetadata(xCoord, yCoord, zCoord)));
 	}
 }
