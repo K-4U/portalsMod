@@ -54,7 +54,6 @@ public class PortalsMain {
     	Blocks.init();
     	Tiles.init();
     	Recipes.init();
-    	Renderers.init();
     	
     	
     	PortalStorage.init();

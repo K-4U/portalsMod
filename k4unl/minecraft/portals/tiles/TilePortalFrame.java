@@ -1,8 +1,9 @@
 package k4unl.minecraft.portals.tiles;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import joptsimple.util.KeyValuePair;
 import k4unl.minecraft.portals.lib.config.Ids;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -67,20 +68,32 @@ public class TilePortalFrame extends TileEntity{
 		}
 	}
 	
-	private boolean isBlockAPortalBlock(int x, int y, int z){
+	private int getBlockId(int x, int y, int z){
 		int bId = worldObj.getBlockId(x, y, z);
+		return bId;
+	}
+	
+	private boolean shouldConnectTo(int bId){
 		return (bId == Ids.portalCoreBlock_actual || bId == Ids.portalFrameBlock_actual || bId == Ids.portalIndicatorBlock_actual);
 	}
 	
-	public List<ForgeDirection> getConnectedSides() {
-		List<ForgeDirection> retList = new ArrayList<ForgeDirection>();
+	public Map<ForgeDirection, Integer> getConnectedSides() {
+		Map<ForgeDirection, Integer> retList = new HashMap<ForgeDirection, Integer>();
 		//Find other blocks:
-		if(isBlockAPortalBlock(this.xCoord+1, this.yCoord, this.zCoord)) retList.add(ForgeDirection.WEST);
-		if(isBlockAPortalBlock(this.xCoord-1, this.yCoord, this.zCoord)) retList.add(ForgeDirection.EAST);
-		if(isBlockAPortalBlock(this.xCoord, this.yCoord+1, this.zCoord)) retList.add(ForgeDirection.UP);
-		if(isBlockAPortalBlock(this.xCoord, this.yCoord-1, this.zCoord)) retList.add(ForgeDirection.DOWN);
-		if(isBlockAPortalBlock(this.xCoord, this.yCoord, this.zCoord+1)) retList.add(ForgeDirection.SOUTH);
-		if(isBlockAPortalBlock(this.xCoord, this.yCoord, this.zCoord-1)) retList.add(ForgeDirection.NORTH);
-		return retList;
+		retList.put(ForgeDirection.WEST, getBlockId(this.xCoord+1, this.yCoord, this.zCoord));
+		retList.put(ForgeDirection.EAST, getBlockId(this.xCoord-1, this.yCoord, this.zCoord));
+		retList.put(ForgeDirection.UP, getBlockId(this.xCoord, this.yCoord+1, this.zCoord));
+		retList.put(ForgeDirection.DOWN, getBlockId(this.xCoord, this.yCoord-1, this.zCoord));
+		retList.put(ForgeDirection.SOUTH, getBlockId(this.xCoord, this.yCoord, this.zCoord+1));
+		retList.put(ForgeDirection.NORTH, getBlockId(this.xCoord, this.yCoord, this.zCoord-1));
+		
+		Map<ForgeDirection, Integer> retMap = new HashMap<ForgeDirection, Integer>();
+		
+		for (Map.Entry<ForgeDirection, Integer> entry : retList.entrySet()) {
+		    if(shouldConnectTo(entry.getValue())){
+		    	retMap.put(entry.getKey(), entry.getValue());
+		    }
+		}
+		return retMap;
 	}
 }

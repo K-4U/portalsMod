@@ -2,6 +2,7 @@ package k4unl.minecraft.portals.lib;
 
 import javax.swing.text.html.parser.Entity;
 
+import k4unl.minecraft.portals.lib.config.Ids;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
