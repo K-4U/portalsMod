@@ -6,6 +6,7 @@ import k4unl.minecraft.portals.lib.config.Ids;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.tiles.TilePortalFrame;
+import k4unl.minecraft.portals.tiles.TilePortalSpawner;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -20,14 +21,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class PortalFrameBlock extends BlockContainer {
+public class PortalSpawnerBlock extends BlockContainer {
 	public static Icon blockIcon;
 	private Map<ForgeDirection, Integer> connectedSides;
 	
-	public PortalFrameBlock(int id) {
+	public PortalSpawnerBlock(int id) {
 		super(id, Material.iron);
 		
-		setUnlocalizedName(Names.portalFrameBlock_unlocalized);
+		setUnlocalizedName(Names.portalSpawnerBlock_unlocalized);
 		setStepSound(Block.soundStoneFootstep);
 		setHardness(3.5f);
 		setCreativeTab(CreativeTabs.tabDecorations); //For now
@@ -37,7 +38,7 @@ public class PortalFrameBlock extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return new TilePortalFrame();
+		return new TilePortalSpawner();
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class PortalFrameBlock extends BlockContainer {
 	
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6){
-		TilePortalFrame frame = (TilePortalFrame)world.getBlockTileEntity(x, y, z);
+		TilePortalSpawner frame = (TilePortalSpawner)world.getBlockTileEntity(x, y, z);
 		
 		if(frame != null && frame.getCore() != null)
 			frame.getCore().invalidateMultiblock();
@@ -101,7 +102,7 @@ public class PortalFrameBlock extends BlockContainer {
 				int z, int blockId) {
 		super.onNeighborBlockChange(world, x, y, z, blockId);
 		
-		TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
+		/*TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
 		if(frame != null){
 			/*
 			this.connectedSides = frame.getConnectedSides();
@@ -118,7 +119,7 @@ public class PortalFrameBlock extends BlockContainer {
 			//ZPos- = South
 			
 			this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);*/			
-		}
+		//}
         
 	}
 	

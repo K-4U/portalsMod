@@ -12,4 +12,7 @@ public class Ids {
 	
 	public static int portalIndicatorBlock_actual;
 	public static final int portalIndicatorBlock_default = 4093;
+	
+	public static int portalSpawnerBlock_actual;
+	public static final int portalSpawnerBlock_default = 4091;
 }

@@ -141,7 +141,7 @@ public class TilePortalCore extends TileEntity {
 		if(this.isActive){
 			//Deactivate portal
 			if(this.ownPortal.getIsValid()){
-				//it SHOULD be valid, but you'll never know for surewwwww
+				//it SHOULD be valid, but you'll never know for sure
 				this.ownPortal.deactivatePortal();
 			}
 		}

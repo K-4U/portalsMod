@@ -7,10 +7,7 @@ import k4unl.minecraft.portals.lib.config.Ids;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
-import k4unl.minecraft.portals.tiles.TilePortalFrame;
 import k4unl.minecraft.portals.tiles.TilePortalIndicator;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -23,6 +20,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class PortalIndicatorBlock extends BlockContainer{
 	private Icon[] iconArray;
@@ -52,6 +51,26 @@ public class PortalIndicatorBlock extends BlockContainer{
 		
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z) {
+		super.onBlockAdded(world, x, y, z);
+		
+		TilePortalIndicator tile = (TilePortalIndicator) world.getBlockTileEntity(x, y, z);
+		if(tile!= null){
+			//Check if we should rotate.
+			if(world.getBlockId(x, y, z+1) == Ids.portalFrameBlock_actual 
+					|| world.getBlockId(x, y, z-1) == Ids.portalFrameBlock_actual
+					|| world.getBlockId(x, y, z+1) == Ids.portalIndicatorBlock_actual
+					|| world.getBlockId(x, y, z-1) == Ids.portalIndicatorBlock_actual){
+				//Frame block placed.
+				//Rotate.
+				tile.setRotated(true);
+			}else{
+				tile.setRotated(false);
+			}
+		}
+	}
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9){
@@ -59,31 +78,35 @@ public class PortalIndicatorBlock extends BlockContainer{
 			return false;
 		
 		
-		
-		TilePortalIndicator dummy = (TilePortalIndicator)world.getBlockTileEntity(x, y, z);
-		
-		if(dummy != null && dummy.getCore() != null){
-			TilePortalCore core = dummy.getCore();
-			if (player.getCurrentEquippedItem() != null) {
-				if (player.getCurrentEquippedItem().getItem() instanceof ItemDye) {
-					
-					core.setColor(core.getIndicatorNumber(x,y,z), getBlockFromDye(player.getCurrentEquippedItem().getItemDamage()));
+		if (player.getCurrentEquippedItem() != null) {
+			if (player.getCurrentEquippedItem().getItem() instanceof ItemDye) {
+				int dye = getBlockFromDye(player.getCurrentEquippedItem().getItemDamage());
+
+				world.setBlockMetadataWithNotify(x, y, z, dye, 2); //Curious to see if this works
+				TilePortalIndicator dummy = (TilePortalIndicator)world.getBlockTileEntity(x, y, z);
+				if(dummy != null && dummy.getCore() != null){
+					TilePortalCore core = dummy.getCore();
+					core.setColor(core.getIndicatorNumber(x,y,z), dye);
 				}
+				
 			}else{
-				//return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
 				return false;
 			}
+		}else{
+			//return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
+			return false;
 		}
 		
 		return true;
 	}
-	
+	/*
 	@SideOnly(Side.CLIENT)
     public int idPicked(World par1World, int par2, int par3, int par4){
         return Ids.portalCoreBlock_actual;
-    }
+    }*/
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void onNeighborBlockChange(World world, int x, int y,
 				int z, int blockId) {
 		super.onNeighborBlockChange(world, x, y, z, blockId);
@@ -92,13 +115,23 @@ public class PortalIndicatorBlock extends BlockContainer{
 		if(tile!= null){
 			tile.checkRedstonePower();
 		}
+		if(blockId == 0 || blockId == Ids.portalFrameBlock_actual || blockId == Ids.portalIndicatorBlock_actual){
+			//Block got placed, or destroyed.
+			if(world.getBlockId(x, y, z+1) == Ids.portalFrameBlock_actual 
+					|| world.getBlockId(x, y, z-1) == Ids.portalFrameBlock_actual
+					|| world.getBlockId(x, y, z+1) == Ids.portalIndicatorBlock_actual
+					|| world.getBlockId(x, y, z-1) == Ids.portalIndicatorBlock_actual){
+				//Frame block placed.
+				//Rotate.
+				tile.setRotated(true);
+			}else{
+				tile.setRotated(false);
+			}
+		}
 	}
 	
 	//Anddd, a lot of stuff copied from ColoredBlock
 	@SideOnly(Side.CLIENT)
-	/**
-	 * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
-	 */
 	public Icon getIcon(int par1, int par2) {
 		ForgeDirection s = ForgeDirection.getOrientation(par1);
 		if(s == ForgeDirection.UP || s == ForgeDirection.DOWN){

@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import k4unl.minecraft.portals.lib.LogHelper;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.models.ModelPortalIndicator;
+import k4unl.minecraft.portals.models.ModelPortalSpawner;
 import k4unl.minecraft.portals.tiles.TilePortalIndicator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -15,13 +16,13 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-public class RendererPortalIndicator extends TileEntitySpecialRenderer {
-	private static final ResourceLocation resLoc = new ResourceLocation(ModInfo.ID.toLowerCase(),"textures/model/PortalIndicator_tmap.png");
-	private ModelPortalIndicator portalIndicator;
+public class RendererPortalSpawner extends TileEntitySpecialRenderer {
+	private static final ResourceLocation resLoc = new ResourceLocation(ModInfo.ID.toLowerCase(),"textures/model/portalSpawner_tmap.png");
+	private ModelPortalSpawner portalSpawner;
 	
 	
-	public RendererPortalIndicator(){
-		this.portalIndicator = new ModelPortalIndicator();
+	public RendererPortalSpawner(){
+		this.portalSpawner = new ModelPortalSpawner();
 	}
 	
 	@Override
@@ -35,16 +36,16 @@ public class RendererPortalIndicator extends TileEntitySpecialRenderer {
 		//Todo: Check the 180
 		//GL11.glRotatef(180, 0F, 0F, 1F);
 		
-		TilePortalIndicator indicator = (TilePortalIndicator) tileEntity;
+		/*TilePortalIndicator indicator = (TilePortalIndicator) tileEntity;
 		portalIndicator.setColor(indicator.getColor());
 
 		if(indicator.getIsRotated()){
 			GL11.glRotatef(180, 1F, 0F, 1F);
 		}else{
-			GL11.glRotatef(180, 0F, 0F, 1F);
+			
 		}
-		
-		//Bind texture
+		*/
+		GL11.glRotatef(180, 0F, 0F, 1F);
 		this.bindTexture(resLoc);
 		
 		
@@ -58,7 +59,7 @@ public class RendererPortalIndicator extends TileEntitySpecialRenderer {
 		//it' s 1/16.
 		//There's 16 pixel in 1 block.
 		//portalFrame.render(tileEntity, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 1F/16F);
-		this.portalIndicator.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		this.portalSpawner.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();

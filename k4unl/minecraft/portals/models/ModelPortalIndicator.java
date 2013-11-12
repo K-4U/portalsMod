@@ -106,4 +106,5 @@ public class ModelPortalIndicator extends ModelBase
 		this.indicatorBlue = clr.getBlue();
 	}
 
+
 }

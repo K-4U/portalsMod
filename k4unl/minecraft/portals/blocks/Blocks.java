@@ -16,12 +16,15 @@ public class Blocks {
 	public static Block portalFrameBlockInst;
 	public static Block portalPortalBlockInst;
 	public static Block portalIndicatorBlockInst;
-
+	
+	public static Block portalSpawnerBlockInst;
+	
 	public static void init() {
 		portalCoreBlockInst = new PortalCoreBlock(Ids.portalCoreBlock_actual);
 		portalFrameBlockInst = new PortalFrameBlock(Ids.portalFrameBlock_actual);
 		portalPortalBlockInst = new PortalPortalBlock(Ids.portalPortalBlock_actual);
 		portalIndicatorBlockInst = new PortalIndicatorBlock(Ids.portalIndicatorBlock_actual);
+		portalSpawnerBlockInst = new PortalSpawnerBlock(Ids.portalSpawnerBlock_actual);
 		
 		registerBlocks();
 		addNames();
@@ -32,7 +35,7 @@ public class Blocks {
 		GameRegistry.registerBlock(portalPortalBlockInst, Names.portalPortalBlock_unlocalized);
 		GameRegistry.registerBlock(portalFrameBlockInst, Names.portalFrameBlock_unlocalized);
 		GameRegistry.registerBlock(portalIndicatorBlockInst, PortalIndicatorBlockHandler.class);
-		
+		GameRegistry.registerBlock(portalSpawnerBlockInst, Names.portalSpawnerBlock_name);
 		
 		
 	}
@@ -51,7 +54,7 @@ public class Blocks {
 		}
 		
 		LanguageRegistry.addName(portalPortalBlockInst, Names.portalPortalBlock_name);
-		
+		LanguageRegistry.addName(portalSpawnerBlockInst, Names.portalSpawnerBlock_name);
 	}
 
 }

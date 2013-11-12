@@ -9,6 +9,7 @@ import k4unl.minecraft.portals.lib.TickHandler;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Recipes;
 import k4unl.minecraft.portals.proxy.CommonProxy;
+import k4unl.minecraft.portals.proxy.PacketHandler;
 import k4unl.minecraft.portals.renderers.Renderers;
 import k4unl.minecraft.portals.tiles.Tiles;
 import k4unl.minecraft.portals.vars.PortalStorage;
@@ -24,7 +25,7 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
  
 @Mod( modid = ModInfo.ID, name = ModInfo.NAME, version = ModInfo.VERSION) 
-@NetworkMod ( channels = {ModInfo.CHANNEL}, clientSideRequired = true, serverSideRequired = true )
+@NetworkMod ( channels = {ModInfo.CHANNEL}, clientSideRequired = true, serverSideRequired = true ,packetHandler = PacketHandler.class)
 public class PortalsMain {
     // The instance of the mod that Forge uses.
     @Instance(value = "k4unlPortals")
