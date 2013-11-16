@@ -6,12 +6,3 @@
 *.ear
 
 #ignore everything
-
-/*
-assets/*
-
-!k4unl
-!assets
-!assets/prtl
-!.gitignore
-!models

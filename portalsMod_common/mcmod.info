@@ -1,0 +1,20 @@
+[
+{
+  "modid": "PRTL",
+  "name": "Portals mod",
+  "description": "Ever wanted to go from place a to b in a flash, but not stop at C? Now you can!",
+  "version": "0.0.1",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [
+    "K4Unl"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
