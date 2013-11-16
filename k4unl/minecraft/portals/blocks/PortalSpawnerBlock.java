@@ -88,14 +88,11 @@ public class PortalSpawnerBlock extends BlockContainer {
     	return this.connectedSides.containsKey(dir);
     }
     
-    private boolean isExtra(ForgeDirection dir){
-    	if(this.connectedSides.containsKey(dir)){
-	    	return (this.connectedSides.get(dir) == Ids.portalCoreBlock_actual 
-	    			|| this.connectedSides.get(dir) == Ids.portalIndicatorBlock_actual);
-    	}else{
-    		return false;
-    	}
+    private boolean isExtra(int blockId){
+    	return (blockId == Ids.portalCoreBlock_actual 
+    			|| blockId == Ids.portalFrameBlock_actual);
     }
+    
 	
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y,
@@ -120,6 +117,22 @@ public class PortalSpawnerBlock extends BlockContainer {
 			
 			this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);*/			
 		//}
+		TilePortalSpawner tile = (TilePortalSpawner) world.getBlockTileEntity(x, y, z);
+		if(blockId == 0 || blockId == Ids.portalFrameBlock_actual || blockId == Ids.portalCoreBlock_actual){
+			//Block got placed, or destroyed.
+			if(isExtra(world.getBlockId(x, y, z-1))){
+				//Rotate.
+				tile.setRotation(1F);
+			}else if(isExtra(world.getBlockId(x+1, y, z))){
+				//Rotate.
+				tile.setRotation(1F);
+			}else if(isExtra(world.getBlockId(x-1, y, z))){
+					//Rotate.
+					tile.setRotation(-1F);
+			}else{
+				tile.setRotation(0);
+			}
+		}
         
 	}
 	

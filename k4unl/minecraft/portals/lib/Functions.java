@@ -6,6 +6,8 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -51,6 +53,12 @@ public class Functions {
 	            Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
 	            Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
 	            Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) );
+	}
+	
+	public static void showMessageInChat(String message){
+		EntityClientPlayerMP pl = Minecraft.getMinecraft().thePlayer;
+		pl.addChatMessage(message);
+		
 	}
 	
 }

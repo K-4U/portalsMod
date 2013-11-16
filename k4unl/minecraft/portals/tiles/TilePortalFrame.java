@@ -70,7 +70,7 @@ public class TilePortalFrame extends TileEntity{
 	}
 	
 	private boolean shouldConnectTo(int bId){
-		return (bId == Ids.portalCoreBlock_actual || bId == Ids.portalFrameBlock_actual || bId == Ids.portalIndicatorBlock_actual);
+		return (bId == Ids.portalCoreBlock_actual || bId == Ids.portalFrameBlock_actual || bId == Ids.portalIndicatorBlock_actual || bId == Ids.portalSpawnerBlock_actual);
 	}
 	
 	public Map<ForgeDirection, Integer> getConnectedSides() {

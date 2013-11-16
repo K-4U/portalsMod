@@ -3,6 +3,7 @@ package k4unl.minecraft.portals.tiles;
 import java.util.logging.Level;
 
 import k4unl.minecraft.portals.blocks.PortalCoreBlock;
+import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.lib.LogHelper;
 import k4unl.minecraft.portals.lib.config.Constants;
 import k4unl.minecraft.portals.lib.config.Ids;
@@ -59,6 +60,8 @@ public class TilePortalCore extends TileEntity {
 		int portalX_pos = (Constants.portalWidth-1)/2;
 		int portalY_neg = 0;
 		int portalY_pos = (Constants.portalHeight-1);
+		boolean spawnerConnected = false;
+		boolean spawnerPresent = false;
 		
 		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
 			LogHelper.log(Level.INFO, "Starting new row");
@@ -69,10 +72,30 @@ public class TilePortalCore extends TileEntity {
 				boolean isCorner = false;
 				boolean isTopRow = false;
 				
+				if(horiz == 0 && vert == 0){
+					continue; //Looking at core block, continue on
+				}
+				
 				int blockId = worldObj.getBlockId(x, y, z);
 				LogHelper.log(Level.INFO, "X: " + x + 
 										  " Y: " + y + 
 										  " ID: " + blockId);
+				
+				//Check in the other direction to see if there's a spawner
+				if(vert == 0){
+					int x2 = xCoord + (direction == 0 ? horiz : 0);
+					int z2 = zCoord + (direction == 1 ? horiz : 0);
+					int blockId2 = worldObj.getBlockId(x2, y, z2);
+					if(blockId2 == frameBlockId && (horiz == -1 || horiz == 1)){
+						spawnerConnected = true;
+					}
+					if(blockId2 == Ids.portalSpawnerBlock_actual){
+						spawnerPresent = true;
+						if(horiz == 1 || horiz == -1){
+							spawnerConnected = true;
+						}
+					}
+				}
 				
 				//Check if we are at a corner
 				isCorner = ((horiz == portalX_neg || horiz == portalX_pos)
@@ -104,12 +127,10 @@ public class TilePortalCore extends TileEntity {
 					return false;
 				}
 				
-				if(horiz == 0 && vert == 0){
-					continue; //Looking at core block, continue on
-				}
+				
 				if((horiz >= (portalX_neg + 1)) && (horiz <= (portalX_pos - 1)) && 
 						(vert >= (portalY_neg + 1)) && (vert <= (portalY_pos - 1))){
-					if(blockId != 0){
+					if(blockId != 0){ //Center
 						return false;
 					}
 				}else{
@@ -119,7 +140,11 @@ public class TilePortalCore extends TileEntity {
 				}
 			}
 		}
-		return true;
+		if(spawnerConnected && spawnerPresent){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	public boolean checkIfProperlyFormed(){
@@ -208,13 +233,11 @@ public class TilePortalCore extends TileEntity {
 	}
 	
 	public void convertDummies(){
-		//Because we are now using a portal Frame. We no longer need to convert the blocks.
-		
 		int portalX_neg = 0-(Constants.portalWidth-1)/2;
 		int portalX_pos = (Constants.portalWidth-1)/2;
 		int portalY_neg = 0;
 		int portalY_pos = (Constants.portalHeight-1);
-		
+		boolean spawnerConnected = false;
 		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
 			for(int vert = portalY_neg; vert <= portalY_pos; vert++){	// Vertical (Y)
 				int x = xCoord + (direction == 1 ? horiz : 0);
@@ -235,25 +258,21 @@ public class TilePortalCore extends TileEntity {
 						//Only do this if the portal is active!
 					}
 				}
-				//Check if current ID is wool, that should be reverted to the indicator:
-				//If we are at top row, and not in a corner, we are looking at the wool
-				/*if(blockId == Block.cloth.blockID){
-					//Fetch the color of the wool.
-					metaDataToSet = worldObj.getBlockMetadata(x, y, z);
-					blockIdToSet = Ids.portalIndicatorBlock_actual;
-				}*/
 				
-				//worldObj.setBlock(x, y, z, blockIdToSet);
-				//if(blockId == Ids.portalIndicatorBlock_actual){
-				//	worldObj.setBlockMetadataWithNotify(x, y, z, metaDataToSet, 2);
-				//}
-				//worldObj.markBlockForUpdate(x, y, z);
 				if(blockId == Ids.portalIndicatorBlock_actual){
 					TilePortalIndicator dummyTE = (TilePortalIndicator)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);
 				}else if(blockId == Ids.portalFrameBlock_actual){
 					TilePortalFrame dummyTE = (TilePortalFrame)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);	
+				}
+				
+				if(vert == 0){
+					//We are at core level. Find the spawner!
+					int x2 = xCoord + (direction == 0 ? horiz : 0);
+					int z2 = zCoord + (direction == 1 ? horiz : 0);
+					blockId = worldObj.getBlockId(x2, y, z2);
+					Functions.showMessageInChat(blockId + " found at (" + x2 + "," + y + "," + z2 + ")");
 				}
 			}
 		}
@@ -268,56 +287,6 @@ public class TilePortalCore extends TileEntity {
 	
 	
 	private void revertDummies(){
-		/*int portalX_neg = 0-(Constants.portalWidth-1)/2;
-		int portalX_pos = (Constants.portalWidth-1)/2;
-		int portalY_neg = 0;
-		int portalY_pos = (Constants.portalHeight-1);
-		
-		portalColors = ownPortal.getColors();
-		
-		for(int horiz = portalX_neg; horiz <= portalX_pos; horiz++){	// Horizontal (X or Z)
-			for(int vert = portalY_neg; vert <= portalY_pos; vert++){	// Vertical (Y)
-				int x = xCoord + (direction == 1 ? horiz : 0);
-				int y = yCoord + vert;
-				int z = zCoord + (direction == 0 ? horiz : 0);
-				boolean isCorner = false;
-				boolean isTopRow = false;
-				
-				int blockId = worldObj.getBlockId(x, y, z);
-				isCorner = ((horiz == portalX_neg || horiz == portalX_pos) && (vert == portalY_neg || vert == portalY_pos));
-				
-				isTopRow = (!isCorner && (vert == portalY_pos));
-				
-				if(horiz == 0 && vert == 0)
-					continue;
-				
-				if(blockId == Ids.portalFrameBlock_actual || 
-						blockId == Ids.portalIndicatorBlock_actual){
-					if(isCorner){
-						worldObj.setBlock(x, y, z, cornerBlockId);
-					}else if(isTopRow){
-						worldObj.setBlock(x, y, z, Block.cloth.blockID);
-						if(horiz == -1){
-							worldObj.setBlockMetadataWithNotify(x, y, z,
-								portalColors.getColor(0), 2);
-						}else if(horiz == 0){
-							worldObj.setBlockMetadataWithNotify(x, y, z,
-									portalColors.getColor(1), 2);
-						}else if(horiz == 1){
-							worldObj.setBlockMetadataWithNotify(x, y, z,
-									portalColors.getColor(2), 2);
-						}
-					}else{
-						worldObj.setBlock(x, y, z, frameBlockId);
-					}
-				}else if(blockId == Ids.portalPortalBlock_actual){
-					worldObj.setBlock(x, y, z, 0);
-				}
-				
-				worldObj.markBlockForUpdate(x, y, z);
-			}
-		}
-		*/
 		this.isValidMultiblock = false;
 		if(this.ownPortal != null){
 			this.ownPortal.setInvalid();

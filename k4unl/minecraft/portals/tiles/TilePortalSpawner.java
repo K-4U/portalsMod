@@ -1,11 +1,19 @@
 package k4unl.minecraft.portals.tiles;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import joptsimple.util.KeyValuePair;
 import k4unl.minecraft.portals.lib.config.Ids;
+import k4unl.minecraft.portals.lib.config.ModInfo;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -16,6 +24,7 @@ public class TilePortalSpawner extends TileEntity{
 	int coreY;
 	int coreZ;
 	boolean isRedstonePowered = false;
+	float rotation = 0F;
 	
 	public void setCore(TilePortalCore core){
 		coreX = core.xCoord;
@@ -38,6 +47,7 @@ public class TilePortalSpawner extends TileEntity{
 		coreX = tagCompound.getInteger("CoreX");
 		coreY = tagCompound.getInteger("CoreY");
 		coreZ = tagCompound.getInteger("CoreZ");
+		rotation = tagCompound.getFloat("rotation");
 	}
 	
 	@Override
@@ -47,6 +57,7 @@ public class TilePortalSpawner extends TileEntity{
 		tagCompound.setInteger("CoreX", coreX);
 		tagCompound.setInteger("CoreY", coreY);
 		tagCompound.setInteger("CoreZ", coreZ);
+		tagCompound.setFloat("rotation", rotation);
 	}
 	
 	public void checkRedstonePower() {
@@ -69,27 +80,51 @@ public class TilePortalSpawner extends TileEntity{
 		return bId;
 	}
 	
-	/*private boolean shouldConnectTo(int bId){
-		return (bId == Ids.portalCoreBlock_actual || bId == Ids.portalFrameBlock_actual || bId == Ids.portalIndicatorBlock_actual);
+	private void updateServerRotation(){
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
+	    DataOutputStream outputStream = new DataOutputStream(bos);
+	    try {
+	        outputStream.writeInt(xCoord);
+	        outputStream.writeInt(yCoord);
+	        outputStream.writeInt(zCoord);
+	        outputStream.writeFloat(this.rotation);
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+	               
+	    Packet250CustomPayload packet = new Packet250CustomPayload();
+	    packet.channel = ModInfo.CHANNEL;
+	    packet.data = bos.toByteArray();
+	    packet.length = bos.size();
+
+		if(worldObj.isRemote){ //Client
+			//PacketDispatcher.sendPacketToServer(packet);
+		}else{ //Server
+			//PacketDispatcher.sendPacketToAllPlayers(packet);
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 	
-	public Map<ForgeDirection, Integer> getConnectedSides() {
-		Map<ForgeDirection, Integer> retList = new HashMap<ForgeDirection, Integer>();
-		//Find other blocks:
-		retList.put(ForgeDirection.WEST, getBlockId(this.xCoord+1, this.yCoord, this.zCoord));
-		retList.put(ForgeDirection.EAST, getBlockId(this.xCoord-1, this.yCoord, this.zCoord));
-		retList.put(ForgeDirection.UP, getBlockId(this.xCoord, this.yCoord+1, this.zCoord));
-		retList.put(ForgeDirection.DOWN, getBlockId(this.xCoord, this.yCoord-1, this.zCoord));
-		retList.put(ForgeDirection.SOUTH, getBlockId(this.xCoord, this.yCoord, this.zCoord+1));
-		retList.put(ForgeDirection.NORTH, getBlockId(this.xCoord, this.yCoord, this.zCoord-1));
-		
-		Map<ForgeDirection, Integer> retMap = new HashMap<ForgeDirection, Integer>();
-		
-		for (Map.Entry<ForgeDirection, Integer> entry : retList.entrySet()) {
-		    if(shouldConnectTo(entry.getValue())){
-		    	retMap.put(entry.getKey(), entry.getValue());
-		    }
-		}
-		return retMap;
-	}*/
+	public float getRotation(){
+		return this.rotation;
+	}
+	
+	public void setRotation(float f) {
+		this.rotation = f;
+		updateServerRotation();
+	}
+	
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet){
+		NBTTagCompound tag = packet.data;
+		this.readFromNBT(tag);
+	
+	}
+	
+	@Override
+	public Packet getDescriptionPacket(){
+	     NBTTagCompound var1 = new NBTTagCompound();
+	     this.writeToNBT(var1);
+	     return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 4, var1);
+	}
 }

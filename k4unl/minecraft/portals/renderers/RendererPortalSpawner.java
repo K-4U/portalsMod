@@ -7,6 +7,7 @@ import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.models.ModelPortalIndicator;
 import k4unl.minecraft.portals.models.ModelPortalSpawner;
 import k4unl.minecraft.portals.tiles.TilePortalIndicator;
+import k4unl.minecraft.portals.tiles.TilePortalSpawner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -32,22 +33,15 @@ public class RendererPortalSpawner extends TileEntitySpecialRenderer {
 		//The halve floats are added because else the model would be offsetted.
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		
+		
 		//Rotate model
 		//Todo: Check the 180
 		//GL11.glRotatef(180, 0F, 0F, 1F);
 		
-		/*TilePortalIndicator indicator = (TilePortalIndicator) tileEntity;
-		portalIndicator.setColor(indicator.getColor());
-
-		if(indicator.getIsRotated()){
-			GL11.glRotatef(180, 1F, 0F, 1F);
-		}else{
-			
-		}
-		*/
-		GL11.glRotatef(180, 0F, 0F, 1F);
-		this.bindTexture(resLoc);
+		TilePortalSpawner spawner = (TilePortalSpawner) tileEntity;
 		
+		//GL11.glRotatef(180, spawner.getRotation(), 0F, .5F);
+		this.bindTexture(resLoc);
 		
 		GL11.glPushMatrix();
 		
@@ -59,7 +53,7 @@ public class RendererPortalSpawner extends TileEntitySpecialRenderer {
 		//it' s 1/16.
 		//There's 16 pixel in 1 block.
 		//portalFrame.render(tileEntity, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 1F/16F);
-		this.portalSpawner.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		this.portalSpawner.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
