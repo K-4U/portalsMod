@@ -98,19 +98,31 @@ public class PortalTunerItem extends Item {
 								player.addChatMessage("Linked portal at (" + lx + ","+ ly +"," + lz + ")!");
 								tagCompound.setBoolean("isLinking", false);
 								//Put it in the core
+								if(!core.isLinked()){
+									ItemStack singleTuner = itemStack.splitStack(1);
+									core.setInventorySlotContents(0, singleTuner);
+								}
 							}
 						}else{
-							//Create tag compound
-							//Put the portal coordinates in there.
-							tagCompound.setBoolean("isLinking", true);
-							tagCompound.setInteger("linkingX", x);
-							tagCompound.setInteger("linkingY", y);
-							tagCompound.setInteger("linkingZ", z);
-							
-							itemStack.setTagCompound(tagCompound);
-							player.addChatMessage("Started linking a portal!");
-							//Put it in the core.
+							if(!core.isLinked()){
+								//Create tag compound
+								//Put the portal coordinates in there.
+								tagCompound.setBoolean("isLinking", true);
+								tagCompound.setInteger("linkingX", x);
+								tagCompound.setInteger("linkingY", y);
+								tagCompound.setInteger("linkingZ", z);
+								
+								itemStack.setTagCompound(tagCompound);
+								player.addChatMessage("Started linking a portal!");
+								core.setLink(0);
+								//Put it in the core.
+								if(!core.isLinked()){
+									ItemStack singleTuner = itemStack.splitStack(1);
+									core.setInventorySlotContents(0, singleTuner);
+								}
+							}
 						}
+						return true;
 					}
 				}
 			}

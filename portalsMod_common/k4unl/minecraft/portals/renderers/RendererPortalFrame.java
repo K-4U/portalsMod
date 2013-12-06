@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 public class RendererPortalFrame extends TileEntitySpecialRenderer {
 	private static final ResourceLocation resLoc = new ResourceLocation(ModInfo.ID.toLowerCase(),"textures/model/PortalFrame_tmap.png");
+	private static final ResourceLocation resLocEnabled = new ResourceLocation(ModInfo.ID.toLowerCase(),"textures/model/PortalFrame_tmap_enabled.png");
+	private static final ResourceLocation resLocActive = new ResourceLocation(ModInfo.ID.toLowerCase(),"textures/model/PortalFrame_tmap_active.png");
 	private ModelPortalFrame portalFrame;
 	
 	
@@ -31,12 +33,23 @@ public class RendererPortalFrame extends TileEntitySpecialRenderer {
 		GL11.glRotatef(180, 0F, 0F, 1F);
 		
 		//Bind texture
-		this.bindTexture(resLoc);
+		TilePortalFrame frame = (TilePortalFrame) tileEntity;
+		if(frame.getCore() != null){
+			if(frame.getCore().isLinked()){
+				this.bindTexture(resLocEnabled);
+			}else if(frame.getCore().getIsActive()){
+				this.bindTexture(resLocActive);
+			}else{
+				this.bindTexture(resLoc);
+			}
+		}else{
+			this.bindTexture(resLoc);
+		}
 		
 		
 		GL11.glPushMatrix();
 		
-		TilePortalFrame frame = (TilePortalFrame) tileEntity;
+		
 		portalFrame.setConnectedSides(frame.getConnectedSides());
 		
 		

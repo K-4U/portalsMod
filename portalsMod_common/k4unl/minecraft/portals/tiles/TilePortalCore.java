@@ -27,13 +27,16 @@ public class TilePortalCore extends TileEntity implements IInventory {
 	private static final int frameBlockId = Ids.portalFrameBlock_actual;
 	private boolean isRedstonePowered = false;
 	
-	private ItemStack[] chestContents = new ItemStack[20];
-	
-	private int portalLinkId;
+	public int portalLinkId;
 	private int direction = 0;
 	private boolean isActive = false;
 	
 	private Portal ownPortal;
+	
+	public boolean isLinked(){
+		return (portalLinkId != 0);
+	}
+
 	
 	public TilePortalCore(){
 		this.ownPortal = new Portal();

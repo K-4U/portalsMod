@@ -12,8 +12,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -30,7 +30,11 @@ public class PortalCoreBlock extends BlockContainer {
 	public static final int META_DIR_WEST = 0x00000000;
 	
 	public static Icon capIcon;
+	public static Icon capIconEnabled;
+	public static Icon capIconActive;
 	public static Icon sideIcon;
+	public static Icon sideIconEnabled;
+	public static Icon sideIconActive;
 	
 	public PortalCoreBlock(int id) {
 		super(id, Material.iron);
@@ -59,7 +63,11 @@ public class PortalCoreBlock extends BlockContainer {
 	@Override
 	public void registerIcons(IconRegister icon) {
 		sideIcon = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_sides");
+		sideIconEnabled = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_side_enabled");
+		sideIconActive = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_side_active");
 		capIcon = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_top");
+		capIconEnabled = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_top_enabled");
+		capIconActive = icon.registerIcon(ModInfo.ID.toLowerCase() + ":" + Names.portalCoreBlock_unlocalized + "_top_active");
 	}
 	
 	@Override
@@ -101,21 +109,17 @@ public class PortalCoreBlock extends BlockContainer {
 		TilePortalCore tileEntity = (TilePortalCore)world.getBlockTileEntity(x, y, z);
 		
 		if(tileEntity != null){
-			/*if(player.isSneaking()){
+			if(player.isSneaking()){
 				if (player.getCurrentEquippedItem() != null) {
 					if(player.getCurrentEquippedItem().getItem() instanceof PortalTunerItem){
-						PortalTunerItem tuner = (PortalTunerItem) player.getCurrentEquippedItem().getItem();
 						
-						if(tuner.getIsLinking()){
-							
-						}
 					}else{
 						return false;
 					}
 				}else{
 					return false;
 				}
-			}*/
+			}
 			
 			
 			// Determine if the Multiblock is currently known to be valid
