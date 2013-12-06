@@ -79,25 +79,25 @@ public class PortalIndicatorBlock extends BlockContainer{
 		
 		
 		if (player.getCurrentEquippedItem() != null) {
-			if (player.getCurrentEquippedItem().getItem() instanceof ItemDye) {
+			/*if (player.getCurrentEquippedItem().getItem() instanceof ItemDye) {
 				int dye = getBlockFromDye(player.getCurrentEquippedItem().getItemDamage());
 
 				world.setBlockMetadataWithNotify(x, y, z, dye, 2); //Curious to see if this works
 				TilePortalIndicator dummy = (TilePortalIndicator)world.getBlockTileEntity(x, y, z);
 				if(dummy != null && dummy.getCore() != null){
 					TilePortalCore core = dummy.getCore();
-					core.setColor(core.getIndicatorNumber(x,y,z), dye);
+					core.setLink(core.getIndicatorNumber(x,y,z), dye);
 				}
 				
-			}else{
+			}else{*/
 				return false;
-			}
+			//}
 		}else{
 			//return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
 			return false;
 		}
 		
-		return true;
+		//return true;
 	}
 	/*
 	@SideOnly(Side.CLIENT)

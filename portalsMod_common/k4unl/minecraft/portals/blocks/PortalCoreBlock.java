@@ -2,6 +2,7 @@ package k4unl.minecraft.portals.blocks;
 
 import java.util.Random;
 
+import k4unl.minecraft.portals.items.PortalTunerItem;
 import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Names;
 import k4unl.minecraft.portals.tiles.TilePortalCore;
@@ -11,6 +12,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -87,15 +90,37 @@ public class PortalCoreBlock extends BlockContainer {
 		if(player.isSneaking())
 			return false;
 		
+		if (player.getCurrentEquippedItem() != null) {
+			if(player.getCurrentEquippedItem().getItem() instanceof PortalTunerItem){
+				return false;
+			}
+		}else{
+			return false;
+		}
+		
 		TilePortalCore tileEntity = (TilePortalCore)world.getBlockTileEntity(x, y, z);
 		
-		if(tileEntity != null)
-		{
+		if(tileEntity != null){
+			/*if(player.isSneaking()){
+				if (player.getCurrentEquippedItem() != null) {
+					if(player.getCurrentEquippedItem().getItem() instanceof PortalTunerItem){
+						PortalTunerItem tuner = (PortalTunerItem) player.getCurrentEquippedItem().getItem();
+						
+						if(tuner.getIsLinking()){
+							
+						}
+					}else{
+						return false;
+					}
+				}else{
+					return false;
+				}
+			}*/
+			
+			
 			// Determine if the Multiblock is currently known to be valid
-			if(!tileEntity.getIsValid())
-			{
-				if(tileEntity.checkIfProperlyFormed())
-				{
+			if(!tileEntity.getIsValid()){
+				if(tileEntity.checkIfProperlyFormed()){
 					tileEntity.convertDummies();
 					player.addChatMessage("Portal created!");
 				}
@@ -108,6 +133,6 @@ public class PortalCoreBlock extends BlockContainer {
 		}
 		
 		return true;
-	}	
+	}
 	
 }

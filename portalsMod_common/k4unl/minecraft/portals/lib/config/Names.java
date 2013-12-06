@@ -15,4 +15,7 @@ public class Names {
 	
 	public static final String portalSpawnerBlock_unlocalized = "portalSpawner";
 	public static final String portalSpawnerBlock_name = "Portal Spawner";
+	
+	public static final String portalTunerItem_unlocalized = "portalTuner";
+	public static final String portalTunerItem_name = "Portal Tuner";
 }

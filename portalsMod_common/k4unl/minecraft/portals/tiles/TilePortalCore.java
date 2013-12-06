@@ -1,34 +1,41 @@
 package k4unl.minecraft.portals.tiles;
 
+import java.util.Random;
 import java.util.logging.Level;
 
 import k4unl.minecraft.portals.blocks.PortalCoreBlock;
+import k4unl.minecraft.portals.items.Items;
+import k4unl.minecraft.portals.items.PortalTunerItem;
 import k4unl.minecraft.portals.lib.Functions;
 import k4unl.minecraft.portals.lib.LogHelper;
 import k4unl.minecraft.portals.lib.config.Constants;
 import k4unl.minecraft.portals.lib.config.Ids;
 import k4unl.minecraft.portals.vars.Portal;
-import k4unl.minecraft.portals.vars.Types.portalColor;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 
-public class TilePortalCore extends TileEntity {
+public class TilePortalCore extends TileEntity implements IInventory {
 	private boolean isValidMultiblock;
 
 	private static final int cornerBlockId = Ids.portalFrameBlock_actual;
 	private static final int frameBlockId = Ids.portalFrameBlock_actual;
 	private boolean isRedstonePowered = false;
 	
-	private portalColor portalColors;
+	private ItemStack[] chestContents = new ItemStack[20];
+	
+	private int portalLinkId;
 	private int direction = 0;
 	private boolean isActive = false;
 	
 	private Portal ownPortal;
 	
 	public TilePortalCore(){
-		this.portalColors = new portalColor(0,0,0);
 		this.ownPortal = new Portal();
 	}
 	
@@ -110,7 +117,7 @@ public class TilePortalCore extends TileEntity {
 				//If we are at top row, and not in a corner, we are looking at the wool
 				isTopRow = (!isCorner && (vert == portalY_pos));
 				
-				if(isTopRow && blockId == Ids.portalIndicatorBlock_actual){
+				/*if(isTopRow && blockId == Ids.portalIndicatorBlock_actual){
 					//Fetch the color of the wool.
 					if(horiz == -1){
 						this.portalColors.setColor(0, 
@@ -125,7 +132,7 @@ public class TilePortalCore extends TileEntity {
 					continue;
 				}else if(isTopRow && blockId != Block.cloth.blockID){
 					return false;
-				}
+				}*/
 				
 				
 				if((horiz >= (portalX_neg + 1)) && (horiz <= (portalX_pos - 1)) && 
@@ -162,7 +169,7 @@ public class TilePortalCore extends TileEntity {
 		return false;
 	}
 	
-	public void setColor(int index, int newColor){
+	public void setLink(int newLink){
 		if(this.isActive){
 			//Deactivate portal
 			if(this.ownPortal.getIsValid()){
@@ -170,16 +177,8 @@ public class TilePortalCore extends TileEntity {
 				this.ownPortal.deactivatePortal();
 			}
 		}
-		this.portalColors.setColor(index, newColor);
-		this.ownPortal.setColors(this.portalColors);
-		//Also, update the child up there.
-		int horiz = index - 1;
-		int vert = Constants.portalHeight-1;
-		int x = xCoord + (direction == 1 ? horiz : 0);
-		int y = yCoord + vert;
-		int z = zCoord + (direction == 0 ? horiz : 0);
-		
-		worldObj.setBlockMetadataWithNotify(x, y, z, newColor, 2); //Curious to see if this works
+		this.portalLinkId = newLink;
+		this.ownPortal.setLink(this.portalLinkId);
 	}
 	
 	public void activatePortal(){
@@ -259,10 +258,10 @@ public class TilePortalCore extends TileEntity {
 					}
 				}
 				
-				if(blockId == Ids.portalIndicatorBlock_actual){
-					TilePortalIndicator dummyTE = (TilePortalIndicator)worldObj.getBlockTileEntity(x, y, z);
-					dummyTE.setCore(this);
-				}else if(blockId == Ids.portalFrameBlock_actual){
+				//if(blockId == Ids.portalIndicatorBlock_actual){
+				//	TilePortalIndicator dummyTE = (TilePortalIndicator)worldObj.getBlockTileEntity(x, y, z);
+				//	dummyTE.setCore(this);
+				if(blockId == Ids.portalFrameBlock_actual){
 					TilePortalFrame dummyTE = (TilePortalFrame)worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);	
 				}
@@ -282,7 +281,7 @@ public class TilePortalCore extends TileEntity {
 			this.ownPortal.close();
 		}
 		this.ownPortal = new Portal(worldObj, xCoord, yCoord, zCoord);
-		this.ownPortal.setColors(this.portalColors);
+		this.ownPortal.setLink(this.portalLinkId);
 	}
 	
 	
@@ -299,6 +298,7 @@ public class TilePortalCore extends TileEntity {
 		super.readFromNBT(tagCompound);
 		
 		isValidMultiblock = tagCompound.getBoolean("isMultiBlock");
+		portalLinkId = tagCompound.getInteger("linkingId");
 		
 		if(isValidMultiblock){
 			if(this.ownPortal.getIsValid() == false){
@@ -314,6 +314,8 @@ public class TilePortalCore extends TileEntity {
 		super.writeToNBT(tagCompound);
 		
 		tagCompound.setBoolean("isMultiBlock", isValidMultiblock);
+		tagCompound.setInteger("linkingId", portalLinkId);
+		
 		
 		if(isValidMultiblock){
 			this.ownPortal.writeToNBT(tagCompound);
@@ -364,5 +366,137 @@ public class TilePortalCore extends TileEntity {
 		}
 		return 0;
 	}
+	
+
+	@Override
+	public int getSizeInventory() {
+		return 1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i) {
+		if(portalLinkId > 0){
+			ItemStack portalItem = new ItemStack(Items.PortalTunerInstance, 1);
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			tagCompound.setBoolean("isLinking", false);
+			tagCompound.setInteger("linkingId", (new Random()).nextInt(1337));
+			
+			portalItem.setTagCompound(tagCompound);
+			portalLinkId = 0;
+			return portalItem;
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemStack) {
+		if(i > 0){
+			return;
+		}else{
+			if(itemStack != null){
+				if(itemStack.getItem() instanceof PortalTunerItem){
+					NBTTagCompound tagCompound = itemStack.getTagCompound();
+					portalLinkId = tagCompound.getInteger("linkingId");
+				}
+			}
+		}
+
+        this.onInventoryChanged();
+	}
+
+	@Override
+	public String getInvName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isInvNameLocalized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 1;
+	}
+
+	@Override
+	public void onInventoryChanged() {
+		
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void openChest() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeChest() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+		// TODO Auto-generated method stub
+		if(itemStack.getItem() instanceof PortalTunerItem && i == 0){
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	@Override
+	public int[] getAccessibleSlotsFromSide(int side) {
+		ForgeDirection s = ForgeDirection.getOrientation(side);
+		if(s.equals(ForgeDirection.UP)){
+			return null;
+		}
+		int ret[] = new int[1];
+		ret[0] = 1;
+		return ret;
+	}
+
+	@Override
+	public boolean canInsertItem(int i, ItemStack itemstack, int side) {
+		ForgeDirection s = ForgeDirection.getOrientation(side);
+		if(s.equals(ForgeDirection.UP)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	@Override
+	public boolean canExtractItem(int i, ItemStack itemstack, int side) {
+		ForgeDirection s = ForgeDirection.getOrientation(side);
+		if(s.equals(ForgeDirection.UP)){
+			return false;
+		}else{
+			return true;
+		}
+	}	*/
+
 
 }

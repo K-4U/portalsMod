@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
 
+//DEPRECATED
 public class ModelPortalIndicator extends ModelBase
 {
   //fields

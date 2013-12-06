@@ -31,7 +31,7 @@ public class PortalPortalBlock extends BlockContainer {
 	public PortalPortalBlock(int id) {
 		super(id, Material.portal);
 		
-		setUnlocalizedName(Names.portalCoreBlock_unlocalized);
+		setUnlocalizedName(Names.portalPortalBlock_unlocalized);
 		setLightValue(0.6F);
 		setHardness(99999F);
 	}

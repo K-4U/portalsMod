@@ -74,10 +74,10 @@ public class PortalStorage {
 	 * Returns first portal with that color
 	 * 
 	 */
-	public static Portal getPortalByColor(Portal ignore, portalColor theColor){
+	public static Portal getPortalByLinkId(Portal ignore, int theLinkId){
 		for(Portal mPortal: portalList){
 			if(!mPortal.equals(ignore)){
-				if(mPortal.getColors().equals(theColor)){
+				if(mPortal.getLink() == theLinkId){
 					return mPortal;
 				}
 			}
@@ -85,20 +85,21 @@ public class PortalStorage {
 		return null;
 	}
 	
+	/*
 	public static ArrayList<Portal> getPortalByColor(portalColor theColor){
 		ArrayList<Portal> coloredPortals = new ArrayList<Portal>();
 		for(Portal mPortal: portalList){
-			if(mPortal.getColors().equals(theColor)){
+			if(mPortal.getLink().equals(theColor)){
 				coloredPortals.add(mPortal);
 			}
 		}
 		return coloredPortals;
-	}
+	}*/
 	
-	public static int getPortalCountByColor(portalColor theColor){
+	public static int getPortalCountByLinkId(int theLinkId){
 		int count = 0;
 		for(Portal mPortal: portalList){
-			if(mPortal.getColors().equals(theColor)){
+			if(mPortal.getLink() == theLinkId){
 				count++;
 			}
 		}

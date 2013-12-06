@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class Portal{
 	private Location portalLocation;
-	private Location portalSpwanLocation; // The location the player should teleport to, when going to this portal
+	private Location portalSpawnLocation; // The location the player should teleport to, when going to this portal
 	private Portal linkedPortal;
 	private World worldObj;
 	private boolean isLinked = false;
@@ -31,7 +31,7 @@ public class Portal{
 	private int cannotFormReason = 0;
 	
 	
-	private portalColor portalColors;
+	private int portalLinkId;
 	
 	public Portal(){
 		this.isValid = false;
@@ -39,7 +39,6 @@ public class Portal{
 	
 	public Portal(World worldObj, int x, int y, int z){
 		this.portalLocation = new Location(x, y, z);
-		portalColors = new portalColor(0, 0, 0);
 		//Add it to the big list:
 		PortalStorage.addToPortalList(this);
 		
@@ -69,25 +68,21 @@ public class Portal{
 	}
 	
 	private void checkLink(){
-		int sameColors = PortalStorage.getPortalCountByColor(this.portalColors);
-		if(sameColors > 2 || sameColors == 1){
-			isLinked = false;
-		}else if(sameColors == 2){ // 2, this one counts as well
-			//Link the portals together
-			Portal linkedPortal = PortalStorage.getPortalByColor(this, 
-					this.portalColors);
+		Portal linkedPortal = PortalStorage.getPortalByLinkId(this, 
+				this.portalLinkId);
+		if(linkedPortal != null){
 			linkedPortal.link(this);
 			this.link(linkedPortal);
 		}
 	}
 	
-	public void setColors(portalColor newColors){
-		portalColors = newColors;
+	public void setLink(int newLink){
+		portalLinkId = newLink;
 		this.checkLink();
 	}
 	
-	public portalColor getColors(){
-		return this.portalColors;
+	public int getLink(){
+		return this.portalLinkId;
 	}
 	
 	public void setWorldObj(World worldObj){
@@ -107,7 +102,7 @@ public class Portal{
 		if(isActive){
 			this.activatePortal();
 		}
-		portalColors = new portalColor(data.getIntArray("portalColors"));
+		portalLinkId = data.getInteger("portalLinkId");
 		
 		//Recheck link
 		this.checkLink();
@@ -119,7 +114,7 @@ public class Portal{
 		data.setInteger("z", portalLocation.getZ());
 		data.setBoolean("isActive", isActive);
 		
-		data.setIntArray("portalColors", portalColors.getColors());
+		data.setInteger("portalLinkId", portalLinkId);
 	}
 
 	public void setInvalid() {

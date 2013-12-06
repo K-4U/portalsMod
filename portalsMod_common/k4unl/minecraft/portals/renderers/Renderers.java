@@ -8,7 +8,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 public class Renderers {
 	public static void init() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePortalFrame.class, new RendererPortalFrame());
-		ClientRegistry.bindTileEntitySpecialRenderer(TilePortalIndicator.class, new RendererPortalIndicator());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TilePortalIndicator.class, new RendererPortalIndicator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePortalSpawner.class, new RendererPortalSpawner());
 	}
 	

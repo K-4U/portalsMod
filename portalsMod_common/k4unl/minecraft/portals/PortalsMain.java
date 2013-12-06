@@ -3,6 +3,7 @@ package k4unl.minecraft.portals;
 import java.util.logging.Level;
 
 import k4unl.minecraft.portals.blocks.Blocks;
+import k4unl.minecraft.portals.items.Items;
 import k4unl.minecraft.portals.lib.ConfigHandler;
 import k4unl.minecraft.portals.lib.LogHelper;
 import k4unl.minecraft.portals.lib.TickHandler;
@@ -10,7 +11,6 @@ import k4unl.minecraft.portals.lib.config.ModInfo;
 import k4unl.minecraft.portals.lib.config.Recipes;
 import k4unl.minecraft.portals.proxy.CommonProxy;
 import k4unl.minecraft.portals.proxy.PacketHandler;
-import k4unl.minecraft.portals.renderers.Renderers;
 import k4unl.minecraft.portals.tiles.Tiles;
 import k4unl.minecraft.portals.vars.PortalStorage;
 import cpw.mods.fml.common.Mod;
@@ -56,15 +56,16 @@ public class PortalsMain {
     	proxy.initSounds();
     	
     }
-   
+    
     @EventHandler 
     public void load(FMLInitializationEvent event) {
     	TickRegistry.registerTickHandler(new TickHandler(), Side.CLIENT);
     	
     	Blocks.init();
     	Tiles.init();
-    	Recipes.init();
+    	Items.init();
     	
+    	Recipes.init();
     	
     	PortalStorage.init();
     	

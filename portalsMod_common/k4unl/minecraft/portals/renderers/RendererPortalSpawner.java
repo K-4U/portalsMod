@@ -36,7 +36,7 @@ public class RendererPortalSpawner extends TileEntitySpecialRenderer {
 		
 		//Rotate model
 		//Todo: Check the 180
-		//GL11.glRotatef(180, 0F, 0F, 1F);
+		GL11.glRotatef(180, 0F, 0F, 1F);
 		
 		TilePortalSpawner spawner = (TilePortalSpawner) tileEntity;
 		

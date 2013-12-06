@@ -15,4 +15,7 @@ public class Ids {
 	
 	public static int portalSpawnerBlock_actual;
 	public static final int portalSpawnerBlock_default = 4091;
+	
+	public static int portalTunerItem_actual;
+	public static final int portalTunerItem_default = 4091;
 }

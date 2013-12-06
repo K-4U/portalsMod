@@ -20,13 +20,14 @@ public class ConfigHandler {
 		}
 	}
 	
-	
 	private static void handleIDs(){
 		Ids.portalCoreBlock_actual = config.getBlock(Names.portalCoreBlock_unlocalized, Ids.portalCoreBlock_default).getInt();
 		Ids.portalFrameBlock_actual = config.getBlock(Names.portalFrameBlock_unlocalized, Ids.portalFrameBlock_default).getInt();
 		Ids.portalPortalBlock_actual = config.getBlock(Names.portalPortalBlock_unlocalized, Ids.portalPortalBlock_default).getInt();
-		Ids.portalIndicatorBlock_actual = config.getBlock(Names.portalIndicatorBlock_unlocalized, Ids.portalIndicatorBlock_default).getInt();
+		//Ids.portalIndicatorBlock_actual = config.getBlock(Names.portalIndicatorBlock_unlocalized, Ids.portalIndicatorBlock_default).getInt();
 		Ids.portalSpawnerBlock_actual = config.getBlock(Names.portalSpawnerBlock_unlocalized, Ids.portalSpawnerBlock_default).getInt();
+		
 		//Note! For items, do -256 on the value!
+		Ids.portalTunerItem_actual = config.getItem(Names.portalTunerItem_unlocalized, Ids.portalTunerItem_default).getInt();
 	}
 }

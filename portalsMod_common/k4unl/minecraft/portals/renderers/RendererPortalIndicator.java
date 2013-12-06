@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+
+//DEPRECATED!
 public class RendererPortalIndicator extends TileEntitySpecialRenderer {
 	private static final ResourceLocation resLoc = new ResourceLocation(ModInfo.ID.toLowerCase(),"textures/model/PortalIndicator_tmap.png");
 	private ModelPortalIndicator portalIndicator;

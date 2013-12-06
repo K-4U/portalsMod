@@ -15,7 +15,7 @@ public class Blocks {
 	public static Block portalCoreBlockInst;
 	public static Block portalFrameBlockInst;
 	public static Block portalPortalBlockInst;
-	public static Block portalIndicatorBlockInst;
+	//public static Block portalIndicatorBlockInst;
 	
 	public static Block portalSpawnerBlockInst;
 	
@@ -23,7 +23,7 @@ public class Blocks {
 		portalCoreBlockInst = new PortalCoreBlock(Ids.portalCoreBlock_actual);
 		portalFrameBlockInst = new PortalFrameBlock(Ids.portalFrameBlock_actual);
 		portalPortalBlockInst = new PortalPortalBlock(Ids.portalPortalBlock_actual);
-		portalIndicatorBlockInst = new PortalIndicatorBlock(Ids.portalIndicatorBlock_actual);
+		//portalIndicatorBlockInst = new PortalIndicatorBlock(Ids.portalIndicatorBlock_actual);
 		portalSpawnerBlockInst = new PortalSpawnerBlock(Ids.portalSpawnerBlock_actual);
 		
 		registerBlocks();
@@ -34,8 +34,8 @@ public class Blocks {
 		GameRegistry.registerBlock(portalCoreBlockInst, Names.portalCoreBlock_unlocalized);
 		GameRegistry.registerBlock(portalPortalBlockInst, Names.portalPortalBlock_unlocalized);
 		GameRegistry.registerBlock(portalFrameBlockInst, Names.portalFrameBlock_unlocalized);
-		GameRegistry.registerBlock(portalIndicatorBlockInst, PortalIndicatorBlockHandler.class);
-		GameRegistry.registerBlock(portalSpawnerBlockInst, Names.portalSpawnerBlock_name);
+		//GameRegistry.registerBlock(portalIndicatorBlockInst, PortalIndicatorBlockHandler.class);
+		GameRegistry.registerBlock(portalSpawnerBlockInst, Names.portalSpawnerBlock_unlocalized);
 		
 		
 	}
@@ -45,13 +45,13 @@ public class Blocks {
 		
 		LanguageRegistry.addName(portalFrameBlockInst, Names.portalFrameBlock_name);
 		
-		for (int i = 0; i < 16; ++i) {
+		/*for (int i = 0; i < 16; ++i) {
 			String dyeName = ItemDye.dyeItemNames[Functions.getDyeFromBlock(i)];
 			dyeName = dyeName.replace('_', ' ');
 			dyeName = Character.toUpperCase(dyeName.charAt(0)) + dyeName.substring(1);
 			LanguageRegistry.addName(new ItemStack(portalIndicatorBlockInst, 1, i), 
 					 dyeName + " " +Names.portalIndicatorBlock_name);
-		}
+		}*/
 		
 		LanguageRegistry.addName(portalPortalBlockInst, Names.portalPortalBlock_name);
 		LanguageRegistry.addName(portalSpawnerBlockInst, Names.portalSpawnerBlock_name);

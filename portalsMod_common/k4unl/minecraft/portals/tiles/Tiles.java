@@ -11,7 +11,7 @@ public class Tiles {
 		GameRegistry.registerTileEntity(TilePortalCore.class, "tilePortalCore");
 		GameRegistry.registerTileEntity(TilePortalFrame.class, "tilePortalDummy");
 		GameRegistry.registerTileEntity(TilePortalPortal.class, "tilePortalPortal");
-		GameRegistry.registerTileEntity(TilePortalIndicator.class, "tilePortalIndicator");
+		//GameRegistry.registerTileEntity(TilePortalIndicator.class, "tilePortalIndicator");
 		
 		GameRegistry.registerTileEntity(TilePortalSpawner.class, "tilePortalSpawner");
 	}
